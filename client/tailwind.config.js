@@ -5,9 +5,9 @@ export default {
   ],
   theme: {
     extend: {
-    //   fontFamily: {
-    //     hydrogen: ['Hydrogen', 'sans-serif'], // 'hydrogen' is the custom class name
-    //   },
+      fontFamily: {
+        cabana: ['Cabana', 'sans-serif'],
+      },
     },
   },
   plugins: [],

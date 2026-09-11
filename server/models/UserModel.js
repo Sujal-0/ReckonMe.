@@ -17,6 +17,10 @@ const userSchema = new mongoose.Schema({
         unique: true,
         sparse: true // Allows multiple documents to have a null username
     },
+    avatarSeed: {
+        type: String,
+        required: false,
+    },
     createdAt: {
     type: Date,
     default: Date.now,

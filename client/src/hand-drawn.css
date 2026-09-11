@@ -1,0 +1,4 @@
+.hand-drawn-border {
+  border: 4px solid #D1D5DB; /* pale gray */
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+}

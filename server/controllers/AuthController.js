@@ -16,17 +16,19 @@ export const signup = async (request, response, next) => {
         if (!username || !email || !password) {
             return response.status(400).send("Username, Email and password are required");
         }
-        const user = await User.create({username,email,password});
+        const upperUsername = username.toUpperCase();
+        const user = await User.create({username: upperUsername, email, password});
         response.cookie("jwt", createToken(email, user.id), {
             maxAge,
-            secure: true,
-            sameSite:"None",
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
         });
         return response.status(201).json({
             user: {
                 id: user.id,
                 email: user.email,
                 username: user.username,
+                avatarSeed: user.avatarSeed,
             },
         });
     } catch (error) {
@@ -47,7 +49,7 @@ export const login = async (request, response, next) => {
     // Check if identifier looks like an email
     const query = identifier.includes("@")
       ? { email: identifier }
-      : { username: identifier };
+      : { username: { $regex: new RegExp(`^${identifier}$`, "i") } };
 
     const user = await User.findOne(query);
     if (!user) {
@@ -61,8 +63,8 @@ export const login = async (request, response, next) => {
 
     response.cookie("jwt", createToken(user.email, user.id), {
       maxAge,
-      secure: true,
-      sameSite: "None",
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
     });
 
     return response.status(200).json({
@@ -70,6 +72,7 @@ export const login = async (request, response, next) => {
         id: user.id,
         email: user.email,
         username: user.username,
+        avatarSeed: user.avatarSeed,
       },
     });
   } catch (error) {
@@ -90,6 +93,7 @@ export const getUserInfo = async (request, response, next) => {
             id: userData.id,
             email: userData.email,
             username: userData.username,
+            avatarSeed: userData.avatarSeed,
             // createdAt: userData.createdAt,
         });
         
@@ -116,7 +120,33 @@ export const updateProfile = async (request, response, next) => {
             id: userData.id,
             email: userData.email,
             username: userData.username,
+            avatarSeed: userData.avatarSeed,
             // createdAt: userData.createdAt,
+        });
+    } catch (error) {
+        console.log({ error });
+        return response.status(500).send("Internal server error");
+    }
+}
+
+export const updateAvatar = async (request, response, next) => {
+    try {
+        const { userId } = request;
+        const { avatarSeed } = request.body;
+        if (!avatarSeed ) {
+            return response.status(400).send("Please provide an avatarSeed");
+        }
+        const userData = await User.findByIdAndUpdate(
+            userId,
+            { avatarSeed },
+            { new: true, runValidators: true }
+        );
+        
+        return response.status(200).json({
+            id: userData.id,
+            email: userData.email,
+            username: userData.username,
+            avatarSeed: userData.avatarSeed,
         });
     } catch (error) {
         console.log({ error });

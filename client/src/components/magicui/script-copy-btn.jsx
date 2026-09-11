@@ -33,7 +33,7 @@ export function ScriptCopyBtn({
         <div className="flex items-center justify-between mb-2">
           {showMultiplePackageOptions && (
             <div className="relative">
-              <div className="inline-flex overflow-hidden text-xs border rounded-md border-border">
+              <div className="inline-flex overflow-hidden text-xs border rounded-none border-border">
                 {packageManagers.map((pm, index) => (
                   <div key={pm} className="flex items-center">
                     {index > 0 && (
@@ -44,8 +44,8 @@ export function ScriptCopyBtn({
                       size="lg"
                       className={`relative rounded-none bg-background px-2 py-1 hover:bg-white/80 hover:text-white ${
                         packageManager === pm
-                          ? "text-xl font-medium text-black"
-                          : " text-xl text-black"
+                          ? "text-lg font-bold text-black font-cabana tracking-widest"
+                          : "text-lg font-bold text-black font-cabana tracking-widest"
                       }`}
                       onClick={() => setPackageManager(pm)}
                     >
@@ -71,13 +71,13 @@ export function ScriptCopyBtn({
         </div>
 
         {/* Command Block + Copy */}
-        <div className="relative flex items-center">
-          <div className="min-w-[300px] grow">
+        <div className="relative flex flex-col sm:flex-row items-stretch">
+          <div className="grow w-full overflow-hidden">
             <pre
               className={cn(
-                "p-1 rounded-md border border-border overflow-x-auto",
+                "flex items-center justify-center h-full p-3 border-2 border-white overflow-hidden rounded-none",
                 "bg-transparent text-[#ffffff]",
-                "font-['IndieSellout'] text-2xl leading-relaxed font-semibold"
+                "font-['IndieSellout'] text-lg tracking-wider sm:text-2xl sm:tracking-widest leading-relaxed font-semibold text-center whitespace-nowrap"
               )}
             >
               {command}
@@ -86,18 +86,18 @@ export function ScriptCopyBtn({
           <Button
             variant="outline"
             size="icon"
-            className="ml-1 px-4 py-2 font-medium bg-[#0A0A0A] text-[#ffffff] text-2xl w-fit transition-all shadow-[3px_3px_0px_white] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] disabled:opacity-50"
+            className="mt-2 sm:mt-0 sm:ml-2 px-6 py-4 rounded-none border-2 border-white font-medium bg-[#0A0A0A] text-[#ffffff] w-full sm:w-auto h-auto transition-all shadow-[3px_3px_0px_white] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] disabled:opacity-50 flex items-center justify-center shrink-0"
             onClick={copyToClipboard}
             aria-label={copied ? "Copied" : "Copy to clipboard"}
           >
             <span className="sr-only">{copied ? "Copied" : "Copy"}</span>
             <Copy
-              className={`h-4 w-4 transition-all duration-300 ${
+              className={`h-6 w-6 transition-all duration-300 ${
                 copied ? "scale-0" : "scale-100"
               }`}
             />
             <Check
-              className={`absolute inset-0 m-auto h-4 w-4 transition-all duration-300 ${
+              className={`absolute inset-0 m-auto h-6 w-6 transition-all duration-300 ${
                 copied ? "scale-100" : "scale-0"
               }`}
             />

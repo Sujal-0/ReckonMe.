@@ -6,6 +6,10 @@ import cookieParser from "cookie-parser";
 import authRoutes from "./routes/AuthRoutes.js";
 import contactRoutes from "./routes/ContactRoutes.js";
 import roomRoutes from "./routes/roomRoutes.js";
+import adminRoutes from "./routes/AdminRoutes.js";
+import historyRoutes from "./routes/historyRoutes.js";
+import questionBookRoutes from "./routes/questionBookRoutes.js";
+import uploadRoutes from "./routes/uploadRoutes.js";
 import initSocket from "./socket/socket.js";
 
 dotenv.config();
@@ -18,7 +22,7 @@ app.use(cors({
     origin: [process.env.ORIGIN],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization"]
+    allowedHeaders: ["Content-Type", "Authorization", "x-admin-secret"]
 }));
 
 app.use(cookieParser());
@@ -27,6 +31,10 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use("/api", contactRoutes); 
 app.use("/api/rooms", roomRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/history", historyRoutes);
+app.use("/api/question-books", questionBookRoutes);
+app.use("/api/uploads", uploadRoutes);
 
 
 const server = app.listen(port, () => {

@@ -1,0 +1,14 @@
+[
+  {
+    "text": "What is the capital of France?",
+    "options": ["Paris", "London", "Berlin", "Madrid"]
+  },
+  {
+    "text": "Which planet is closest to the Sun?",
+    "options": ["Mercury", "Venus", "Earth", "Mars"]
+  },
+  {
+    "text": "Who painted the Mona Lisa?",
+    "options": ["Leonardo da Vinci", "Pablo Picasso", "Vincent van Gogh", "Claude Monet"]
+  }
+]

@@ -70,6 +70,13 @@ export function SmoothCursor({
   const lastUpdateTime = useRef(Date.now());
   const previousAngle = useRef(0);
   const accumulatedRotation = useRef(0);
+  
+  const [isTouchDevice, setIsTouchDevice] = useState(true); // Default true to avoid flash on mobile
+
+  useEffect(() => {
+    const isTouch = window.matchMedia("(pointer: coarse)").matches;
+    setIsTouchDevice(isTouch);
+  }, []);
 
   const cursorX = useSpring(0, springConfig);
   const cursorY = useSpring(0, springConfig);
@@ -143,15 +150,21 @@ export function SmoothCursor({
       });
     };
 
-    document.body.style.cursor = "none";
-    window.addEventListener("mousemove", throttledMouseMove);
+    if (!isTouchDevice) {
+      document.body.style.cursor = "none";
+      window.addEventListener("mousemove", throttledMouseMove);
+    }
 
     return () => {
-      window.removeEventListener("mousemove", throttledMouseMove);
-      document.body.style.cursor = "auto";
+      if (!isTouchDevice) {
+        window.removeEventListener("mousemove", throttledMouseMove);
+        document.body.style.cursor = "auto";
+      }
       if (rafId) cancelAnimationFrame(rafId);
     };
-  }, [cursorX, cursorY, rotation, scale]);
+  }, [cursorX, cursorY, rotation, scale, isTouchDevice]);
+
+  if (isTouchDevice) return null;
 
   return (
     <motion.div

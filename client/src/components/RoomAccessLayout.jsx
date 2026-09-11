@@ -1,65 +1,26 @@
-// client/src/components/RoomAccessHandler.jsx
-import { useEffect, useState, useCallback, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+// client/src/components/RoomAccessLayout.jsx
+import { useEffect, useState, useRef } from "react";
+import { useParams, useNavigate, Outlet } from "react-router-dom";
 import { nanoid } from "nanoid";
 import useRoomStore from "@/store/roomStore";
+import { useAppStore } from "@/store";
 import { apiClient } from "@/lib/api-client";
 import { ROOM_ROUTE, ROOM_JOIN_ROUTE } from "@/utils/constants";
 import socket from "@/lib/socket";
+import { toast } from "sonner";
+import { ReckonLoader } from "@/components/ui/ReckonLoader";
 
-const RoomAccessHandler = ({ children }) => {
+const RoomAccessLayout = () => {
   const { code: roomId } = useParams();
   const navigate = useNavigate();
-  const { player, room, setRoom, setPlayer, getRoomId, resetRoom } =
-    useRoomStore();
+  const { player, room, setRoom, setPlayer, getRoomId, resetRoom } = useRoomStore();
+  const { userInfo } = useAppStore();
   const currentRoomId = getRoomId();
   const [isJoining, setIsJoining] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const processedRef = useRef(false);
 
-  // Handle browser back/refresh
-  const handleBeforeUnload = useCallback(
-    (e) => {
-      if (room && player) {
-        e.preventDefault();
-        e.returnValue = "Are you sure you want to leave the room?";
-        return e.returnValue;
-      }
-    },
-    [room, player]
-  );
-
-  // Setup browser navigation interceptors
-  useEffect(() => {
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    const handlePopState = (e) => {
-      if (room && player) {
-        const currentUrl = window.location.href;
-        window.history.pushState(null, "", currentUrl);
-
-        const confirmLeave = window.confirm(
-          "Are you sure you want to leave the room?"
-        );
-
-        if (confirmLeave) {
-          socket.emit("leave-room", {
-            roomId: currentRoomId,
-            playerId: player.id,
-          });
-          resetRoom();
-          window.history.back();
-        }
-      }
-    };
-
-    window.addEventListener("popstate", handlePopState);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-      window.removeEventListener("popstate", handlePopState);
-    };
-  }, [room, player, currentRoomId, handleBeforeUnload, resetRoom]);
+  // Removed browser navigation interceptors to allow seamless reload
 
   // Setup socket listeners - separate from room access logic
   useEffect(() => {
@@ -86,7 +47,7 @@ const RoomAccessHandler = ({ children }) => {
 
     const handleHostLeft = ({ message }) => {
       console.log("Host left:", message);
-      alert(message);
+      toast.error(message);
       resetRoom();
       navigate("/");
     };
@@ -135,7 +96,7 @@ const RoomAccessHandler = ({ children }) => {
 
     const handleRoomExpired = ({ message }) => {
       console.log("Room expired:", message);
-      alert(message);
+      toast.error(message);
       resetRoom();
       navigate("/");
     };
@@ -229,7 +190,9 @@ const RoomAccessHandler = ({ children }) => {
         const playerId = nanoid(8);
         const newPlayer = {
           id: playerId,
-          name: "",
+          name: userInfo?.username || "",
+          userId: userInfo?.id || null,
+          avatarSeed: userInfo?.avatarSeed || playerId,
           isHost: false,
           ready: false,
         };
@@ -252,7 +215,7 @@ const RoomAccessHandler = ({ children }) => {
       } catch (error) {
         const errorMessage = error.response?.data?.error || error.message;
         console.error("Failed to access room:", errorMessage);
-        alert(`Cannot join room: ${errorMessage}`);
+        toast.error(`Cannot join room: ${errorMessage}`);
         resetRoom();
         navigate("/");
       } finally {
@@ -281,132 +244,13 @@ const RoomAccessHandler = ({ children }) => {
 
   if (!isReady || !player || !room || currentRoomId !== roomId) {
     return (
-      <div className="flex items-center justify-center min-h-screen p-6 text-white">
-        <div className="w-full max-w-md text-center">
-          {/* Main Loading Animation */}
-          <div className="mb-8">
-            <div className="relative">
-              {/* Animated Logo/Title */}
-              <h1 className="text-4xl font-bold mb-4 font-['IndieSellout']">
-                <span className="inline-block animate-pulse">R</span>
-                <span
-                  className="inline-block animate-pulse"
-                  style={{ animationDelay: "0.1s" }}
-                >
-                  e
-                </span>
-                <span
-                  className="inline-block animate-pulse"
-                  style={{ animationDelay: "0.2s" }}
-                >
-                  c
-                </span>
-                <span
-                  className="inline-block animate-pulse"
-                  style={{ animationDelay: "0.3s" }}
-                >
-                  k
-                </span>
-                <span
-                  className="inline-block animate-pulse"
-                  style={{ animationDelay: "0.4s" }}
-                >
-                  o
-                </span>
-                <span
-                  className="inline-block animate-pulse"
-                  style={{ animationDelay: "0.5s" }}
-                >
-                  n
-                </span>
-                <span
-                  className="inline-block animate-pulse"
-                  style={{ animationDelay: "0.6s" }}
-                >
-                  M
-                </span>
-                <span
-                  className="inline-block animate-pulse"
-                  style={{ animationDelay: "0.7s" }}
-                >
-                  e
-                </span>
-              </h1>
-
-              {/* Loading Spinner with Theme */}
-              <div className="relative w-16 h-16 mx-auto mb-6">
-                <div className="absolute inset-0 border-4 rounded-full border-white/20"></div>
-                <div className="absolute inset-0 border-4 border-transparent rounded-full border-t-white animate-spin"></div>
-                <div
-                  className="absolute inset-2 border-2 border-transparent border-r-[#4D4C7D] rounded-full animate-spin"
-                  style={{
-                    animationDirection: "reverse",
-                    animationDuration: "1.5s",
-                  }}
-                ></div>
-              </div>
-            </div>
-          </div>
-
-          {/* Status Message with Theme Styling */}
-          <div className="px-6 py-4 rounded-lg bg-transparent font-bold text-white placeholder-white/50 focus:outline-none border-0 border-b-2 transition-all shadow-[3px_3px_0px_white] mb-6">
-            <div className="text-2xl font-bold mb-2 font-['IndieSellout']">
-              {isJoining ? "🚪 Joining Room" : "⚡ Setting Up"}
-            </div>
-            <div className="text-lg text-white/80">
-              {isJoining
-                ? "Getting you connected..."
-                : "Preparing your experience..."}
-            </div>
-          </div>
-
-          {/* Progress Dots */}
-          <div className="flex justify-center mb-8 space-x-2">
-            <div className="w-3 h-3 rounded-full bg-white/60 animate-bounce"></div>
-            <div
-              className="w-3 h-3 rounded-full bg-white/60 animate-bounce"
-              style={{ animationDelay: "0.2s" }}
-            ></div>
-            <div
-              className="w-3 h-3 rounded-full bg-white/60 animate-bounce"
-              style={{ animationDelay: "0.4s" }}
-            ></div>
-          </div>
-
-          {/* Debug Info in Theme Style */}
-          <div className="space-y-3">
-            <div className="px-4 py-2 rounded-lg bg-transparent text-sm font-bold text-white/60 border-0 border-b transition-all shadow-[2px_2px_0px_rgba(255,255,255,0.3)]">
-              <span className="text-[#4D4C7D]">Room:</span>{" "}
-              {roomId || "Loading..."}
-            </div>
-
-            <div className="px-4 py-2 rounded-lg bg-transparent text-sm font-bold text-white/60 border-0 border-b transition-all shadow-[2px_2px_0px_rgba(255,255,255,0.3)]">
-              <span className="text-[#4D4C7D]">Player:</span>{" "}
-              {player ? player.id.slice(0, 8) + "..." : "Creating..."}
-            </div>
-
-            <div className="px-4 py-2 rounded-lg bg-transparent text-sm font-bold text-white/60 border-0 border-b transition-all shadow-[2px_2px_0px_rgba(255,255,255,0.3)]">
-              <span className="text-[#4D4C7D]">Status:</span>{" "}
-              {room
-                ? `Connected (${room.players?.length || 0} players)`
-                : "Connecting..."}
-            </div>
-          </div>
-
-          {/* Fun Loading Messages */}
-          <div className="mt-8 text-white/50 text-sm font-['IndieSellout']">
-            <div className="animate-pulse">
-              {isJoining
-                ? "Knock knock... who's there? You!"
-                : "Almost ready to guess some answers!"}
-            </div>
-          </div>
-        </div>
+      <div className="flex flex-col items-center justify-center min-h-screen p-6 text-white bg-transparent">
+        <ReckonLoader text={isJoining ? "Joining Room..." : "Setting Up..."} />
       </div>
     );
   }
 
-  return children;
+  return <Outlet />;
 };
 
-export default RoomAccessHandler;
+export default RoomAccessLayout;

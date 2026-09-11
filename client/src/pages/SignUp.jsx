@@ -79,22 +79,23 @@ export default function SignUp() {
             type="text"
             placeholder="Username"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="flex-1 px-4 py-1 mt-4 rounded-lg bg-transparent text-2xl font-medium text-white placeholder-white/50 focus:outline-none border-0 border-b-2 transition-all shadow-[3px_3px_0px_white] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] tracking-widest leading-tight"
+            onChange={(e) => setUsername(e.target.value.toUpperCase())}
+            maxLength={12}
+            className="flex-1 px-4 py-1 mt-4 rounded-none bg-transparent text-2xl font-medium text-white placeholder-white/50 focus:outline-none border-0 border-b-2 transition-all shadow-[3px_3px_0px_white] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] font-cabana tracking-widest leading-tight uppercase"
           />
           <input
             type="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="flex-1 px-4 py-1 mt-4 rounded-lg bg-transparent text-2xl font-medium text-white placeholder-white/50 focus:outline-none border-0 border-b-2 transition-all shadow-[3px_3px_0px_white] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] tracking-widest leading-tight"
+            className="flex-1 px-4 py-1 mt-4 rounded-none bg-transparent text-2xl font-medium text-white placeholder-white/50 focus:outline-none border-0 border-b-2 transition-all shadow-[3px_3px_0px_white] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] font-cabana tracking-widest leading-tight"
           />
           <input
             type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="flex-1 px-4 py-1 mt-4 rounded-lg bg-transparent text-2xl font-medium text-white placeholder-white/50 focus:outline-none border-0 border-b-2 transition-all shadow-[3px_3px_0px_white] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] tracking-widest leading-tight"
+            className="flex-1 px-4 py-1 mt-4 rounded-none bg-transparent text-2xl font-medium text-white placeholder-white/50 focus:outline-none border-0 border-b-2 transition-all shadow-[3px_3px_0px_white] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] font-cabana tracking-widest leading-tight"
           />
           <button
             className="px-10 py-2 font-medium mt-4 bg-[#0A0A0A] text-[#ffffff] text-2xl w-full transition-all shadow-[3px_3px_0px_white] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px]"

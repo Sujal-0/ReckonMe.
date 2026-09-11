@@ -16,16 +16,18 @@ import Lobby from "./pages/Lobby";
 import { SmoothCursor } from "./components/ui/smooth-cursor";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
+import { AdminDashboard } from "./pages/AdminDashboard";
 import { apiClient } from "./lib/api-client";
 import { GET_USER_INFO } from "./utils/constants";
 import { useAppStore } from "./store";
 import { useEffect, useState } from "react";
-import RoomAccessHandler from "./components/RoomAccessHandler";
+import RoomAccessLayout from "./components/RoomAccessLayout";
+import { ReckonLoader } from "./components/ui/ReckonLoader";
 
 const PrivateRoute = ({ children, loading }) => {
   const { userInfo } = useAppStore();
   if (loading) {
-    return <div>Loading...</div>; // Show a loading state while fetching user info
+    return <div className="flex items-center justify-center min-h-screen"><ReckonLoader text="Loading..." /></div>; // Show a loading state while fetching user info
   }
   const isAuthenticated = !!userInfo;
   return isAuthenticated ? children : <Navigate to="/auth" />;
@@ -68,15 +70,15 @@ function App() {
 
   if (loading) {
     return (
-      <div className="text-2xl font-bold animate-pulse font-['IndieSellout']">
-        Loading...
+      <div className="flex flex-col items-center justify-center min-h-screen bg-[#0A0A0A]">
+        <ReckonLoader text="Loading..." />
       </div>
     );
   }
   return (
     <BrowserRouter>
       {/* Background */}
-      <div className="fixed inset-0 -z-10 bg-[#0A0A0A] overflow-hidden cursor-none">
+      <div className="fixed inset-0 -z-10 bg-[#0A0A0A] overflow-hidden">
         <Particles
           particleColors={["#ffffff", "#ffffff"]}
           particleCount={200}
@@ -100,9 +102,13 @@ function App() {
 function AnimatedRoutes() {
   const location = useLocation();
 
+  // For nested room routes, keep the key stable to prevent layout unmounting.
+  const match = location.pathname.match(/^\/(lobby|game|results)\/([^/]+)/);
+  const routeKey = match ? `room-${match[2]}` : location.pathname;
+
   return (
     <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
+      <Routes location={location} key={routeKey}>
         <Route
           path="/"
           element={
@@ -140,31 +146,42 @@ function AnimatedRoutes() {
           }
         />
         <Route
-          path="/lobby/:code"
+          path="/admin/reckon-control"
           element={
-            <RoomAccessHandler>
-              <PageWrapper>
+            <PageWrapper>
+              <AdminDashboard />
+            </PageWrapper>
+          }
+        />
+        
+        {/* Nested Room Routes - Prevent Layout Unmounts */}
+        <Route element={<RoomAccessLayout />}>
+          <Route
+            path="/lobby/:code"
+            element={
+              <PageWrapper key="lobby">
                 <Lobby />
               </PageWrapper>
-            </RoomAccessHandler>
-          }
-        />
-        <Route
-          path="/game/:code"
-          element={
-            <PageWrapper>
-              <Game />
-            </PageWrapper>
-          }
-        />
-        <Route
-          path="/results/:code"
-          element={
-            <PageWrapper>
-              <Results />
-            </PageWrapper>
-          }
-        />
+            }
+          />
+          <Route
+            path="/game/:code"
+            element={
+              <PageWrapper key="game">
+                <Game />
+              </PageWrapper>
+            }
+          />
+          <Route
+            path="/results/:code"
+            element={
+              <PageWrapper key="results">
+                <Results />
+              </PageWrapper>
+            }
+          />
+        </Route>
+
         <Route
           path="*"
           element={

@@ -4,11 +4,13 @@ import mongoose from "mongoose";
 const playerSchema = new mongoose.Schema({
   id: { type: String, required: true },
   name: { type: String, default: "" }, // name set in lobby
+  avatarSeed: { type: String, default: "" }, // seed for DiceBear avatar
   score: { type: Number, default: 0 },
   isHost: { type: Boolean, default: false },
   ready: { type: Boolean, default: false },
   lastActive: { type: Date, default: Date.now }, // For disconnect tracking
   disconnectedAt: { type: Date, default: null }, // Track disconnection time
+  wantsToPlayAgain: { type: Boolean, default: false }, // For play again logic
   answers: [{ 
     questionId: String,
     answer: String,
@@ -26,8 +28,13 @@ const playerSchema = new mongoose.Schema({
 const roundSchema = new mongoose.Schema({
   roundNumber: Number,
   question: String,
+  options: [String],
+  category: String,
+  heatLevel: Number,
+  spotlightPlayerId: String, // if it's a hot seat round
+  correctAnswer: String, // the lie, if it's hot seat
   answers: { type: Map, of: String }, // playerId -> answer
-  guesses: { type: Map, of: Object }, // playerId -> { guess, correct }
+  guesses: { type: Map, of: Object }, // playerId -> { targetId, guess, correct }
 });
 
 const roomSchema = new mongoose.Schema(
@@ -44,7 +51,7 @@ const roomSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["lobby", "answering", "guessing", "revealing", "ended"],
+      enum: ["lobby", "pre-game", "playing", "answering", "guessing", "revealing", "finished", "ended"],
       default: "lobby",
     },
 
@@ -72,7 +79,7 @@ const roomSchema = new mongoose.Schema(
     gameState: {
       phase: {
         type: String,
-        enum: ['waiting', 'lobby', 'answering', 'guessing', 'revealing', 'ended'],
+        enum: ['waiting', 'lobby', 'pre-game', 'category-reveal', 'input', 'revealing', 'finished', 'ended'],
         default: 'lobby'
       },
       currentQuestion: { type: Number, default: 0 },
@@ -83,10 +90,24 @@ const roomSchema = new mongoose.Schema(
 
     settings: {
       lobbyTimeout: { type: Number, default: 300 }, // 5 minutes
-      gameTimeout: { type: Number, default: 600 }, // 10 minutes
+      gameTimeout: { type: Number, default: 3600 }, // 60 minutes
       questionsPerGame: { type: Number, default: 5 },
-      timePerQuestion: { type: Number, default: 60 }
+      timePerQuestion: { type: Number, default: 120 },
+      useCustomQuestions: { type: Boolean, default: false },
+      customQuestions: { type: Array, default: [] },
+      sharedSettingsAccess: { type: Boolean, default: false },
+      questionMode: { type: String, enum: ['random', 'categories', 'custom', 'two_truths'], default: 'random' },
+      categories: { type: [String], default: [] },
+      includeHotSeat: { type: Boolean, default: false }
     },
+
+    preGameInputs: [{
+      playerId: String,
+      statements: [{
+        text: String,
+        isLie: Boolean
+      }]
+    }],
 
     rounds: [roundSchema],
 
@@ -101,12 +122,13 @@ const roomSchema = new mongoose.Schema(
         score: { type: Number, default: 0 },
       },
     ],
+    messages: { type: Array, default: [] },
 
     questionBankId: { type: mongoose.Schema.Types.ObjectId, ref: "QuestionBank" },
 
     // Add new fields
     lastActivity: { type: Date, default: Date.now },
-    expiresAt: { type: Date, required: true }, // Room expiration time
+    expiresAt: { type: Date, required: true, index: { expires: 0 } }, // Room expiration time with MongoDB TTL
     minPlayers: { type: Number, default: 2 },
     hostHistory: [{ // Track host changes
       playerId: String,
@@ -169,9 +191,17 @@ roomSchema.statics.startGame = async function(roomId) {
   const room = await this.findOne({ roomId });
   if (!room) throw new Error('Room not found');
 
-  room.gameState.phase = 'answering';
+  if (room.settings.includeHotSeat) {
+    room.status = 'pre-game';
+    room.gameState.phase = 'pre-game';
+  } else {
+    room.status = 'playing';
+    room.gameState.phase = 'input';
+  }
+
   room.gameState.startedAt = new Date();
   room.timers.gameExpiry = new Date(Date.now() + (room.settings.gameTimeout * 1000));
+  room.expiresAt = new Date(Date.now() + 12 * 60 * 60 * 1000); // 12 hours TTL for active/finished games
   
   return room.save();
 };
@@ -182,6 +212,7 @@ roomSchema.statics.endGame = async function(roomId) {
 
   room.gameState.phase = 'ended';
   room.gameState.endedAt = new Date();
+  room.expiresAt = new Date(Date.now() + 12 * 60 * 60 * 1000); // Reset to 12 hours for cleanup
   
   return room.save();
 };

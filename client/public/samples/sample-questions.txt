@@ -1,0 +1,8 @@
+Q: What is the capital of France?
+O: Paris, London, Berlin, Madrid
+
+Q: Which planet is closest to the Sun?
+O: Mercury, Venus, Earth, Mars
+
+Q: Who painted the Mona Lisa?
+O: Leonardo da Vinci, Pablo Picasso, Vincent van Gogh, Claude Monet

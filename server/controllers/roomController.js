@@ -1,5 +1,6 @@
 // server/controllers/roomController.js
 import Room from "../models/RoomModel.js";
+import Question from "../models/QuestionModel.js";
 import { nanoid } from "nanoid";
 
 // ✅ Create Room (mainly for REST API, socket handles actual creation)
@@ -146,3 +147,11 @@ export const listRooms = async (req, res) => {
   }
 };
 
+export const getAvailableCategories = async (req, res) => {
+  try {
+    const categories = await Question.distinct('category', { isCustom: false });
+    return res.status(200).json({ categories });
+  } catch (err) {
+    return res.status(500).json({ error: 'Failed to fetch categories' });
+  }
+};

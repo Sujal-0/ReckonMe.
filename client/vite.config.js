@@ -11,4 +11,18 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    host: '0.0.0.0', // Expose to local network
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8747',
+        changeOrigin: true
+      },
+      '/socket.io': {
+        target: 'http://localhost:8747',
+        ws: true,
+        changeOrigin: true
+      }
+    }
+  }
 })

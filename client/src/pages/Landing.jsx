@@ -10,6 +10,7 @@ import { apiClient } from "@/lib/api-client";
 import { LOGOUT_ROUTE } from "@/utils/constants";
 import SpotlightCard from "@/components/ReactBits/SpotLightCard";
 import { MorphingText } from "@/components/magicui/morphing-text";
+import { SparklesText } from "@/components/ui/sparkles-text";
 import TextFlipperEffect from "@/components/SkiperUI/TextFlipperEffect";
 import BlockInTextCard from "@/components/HoverDev/BlockInTextCard";
 import Footer from "./Footer";
@@ -80,21 +81,23 @@ export default function Landing() {
           id="center"
           className="flex flex-col items-center justify-center flex-1 px-4 text-center"
         >
-          <SplitText
-            text="ReckonMe!"
-            className="text-4xl font-semibold leading-tight tracking-widest sm:text-5xl md:text-6xl lg:text-8xl"
-            delay={100}
-            duration={0.6}
-            ease="power3.out"
-            splitType="chars"
-            from={{ opacity: 0, y: 40 }}
-            to={{ opacity: 1, y: 0 }}
-            threshold={0.1}
-            rootMargin="-100px"
-            textAlign="center"
-          />
+          <SparklesText className="bg-transparent text-white leading-none inline-block" colors={{first: "#E48F45", second: "#87CEFA"}} sparklesCount={8}>
+            <SplitText
+              text="ReckonMe!"
+              className="text-4xl font-semibold leading-tight tracking-widest sm:text-5xl md:text-6xl lg:text-8xl"
+              delay={100}
+              duration={0.6}
+              ease="power3.out"
+              splitType="chars"
+              from={{ opacity: 0, y: 40 }}
+              to={{ opacity: 1, y: 0 }}
+              threshold={0.1}
+              rootMargin="-100px"
+              textAlign="center"
+            />
+          </SparklesText>
 
-          <p className="mt-4 text-lg leading-snug tracking-wide sm:text-2xl md:text-3xl lg:text-4xl">
+          <p className="mt-4 text-lg leading-snug tracking-wide sm:text-2xl md:text-3xl lg:text-4xl font-cabana">
             The game{" "}
             <Highlighter action="underline" color="#443C68">
               where you reckon
@@ -140,13 +143,13 @@ export default function Landing() {
               textAlign="center"
             />
           </Highlighter>
-          <p className="mt-4 text-2xl leading-tight tracking-widest text-start sm:text-3xl md:text-3xl lg:text-4xl">
+          <p className="mt-4 text-xl leading-tight tracking-widest text-start sm:text-2xl md:text-3xl lg:text-4xl font-cabana">
             - Answer to each question
           </p>
-          <p className="mt-4 text-2xl leading-tight tracking-widest text-start sm:text-3xl md:text-3xl lg:text-4xl">
+          <p className="mt-4 text-xl leading-tight tracking-widest text-start sm:text-2xl md:text-3xl lg:text-4xl font-cabana">
             - Guess what your friends answered!
           </p>
-          <p className="mt-4 text-2xl leading-tight tracking-widest text-start sm:text-3xl md:text-3xl lg:text-4xl">
+          <p className="mt-4 text-xl leading-tight tracking-widest text-start sm:text-2xl md:text-3xl lg:text-4xl font-cabana">
             - Who has most right guesses wins!
           </p>
         </div>
@@ -170,18 +173,18 @@ export default function Landing() {
 
         {/* Spotlight Card */}
         <SpotlightCard
-          className="w-full max-w-lg mt-10 custom-spotlight-card lg:mt-0"
+          className="w-full max-w-lg mt-10 custom-spotlight-card sketchy-shape border-4 border-white/20 lg:mt-0"
           spotlightColor="rgba(0, 229, 255, 0.2)"
         >
           <div className="w-full">
-            <p className="text-lg leading-relaxed text-center text-gray-300 sm:text-xl md:text-2xl lg:text-3xl lg:text-left">
+            <p className="text-lg leading-relaxed text-center text-gray-300 sm:text-xl md:text-2xl lg:text-3xl lg:text-left font-cabana">
               Hi, I'm Sujal, the developer behind ReckonMe. I built this game
               because I love how technology can bring people closer and spark
               genuine moments of fun. This is my passion project, a simple way
               for friends to connect and discover a new side to each other. I
               hope you have as much fun playing as I did building it!
             </p>
-            <div className="mt-6 text-lg text-center sm:text-xl md:text-2xl lg:text-left">
+            <div className="mt-6 text-lg text-center sm:text-xl md:text-2xl lg:text-left font-cabana">
               <Highlighter action="highlight" color="#4D4C7D">
                 A passion project for friends, by a friend.
               </Highlighter>

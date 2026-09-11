@@ -1,0 +1,62 @@
+[
+  {
+    "text": "Would you rather know exactly WHEN you are going to die, or exactly HOW you are going to die?",
+    "options": ["When I die", "How I die"],
+    "category": "WOULD_YOU_RATHER",
+    "heatLevel": 3
+  },
+  {
+    "text": "If you had to give up one of these for the rest of your life, which would it be?",
+    "options": ["Music", "Movies & TV Shows", "Video Games", "Social Media"],
+    "category": "ICEBREAKER",
+    "heatLevel": 1
+  },
+  {
+    "text": "Never Have I Ever Snooped through a significant other's phone.",
+    "options": ["I Have", "I Have Never"],
+    "category": "NEVER_HAVE_I_EVER",
+    "heatLevel": 4
+  },
+  {
+    "text": "Who is most likely to accidentally start a fire while cooking?",
+    "options": ["{PLAYER_1}", "{PLAYER_2}"],
+    "category": "MOST_LIKELY_TO",
+    "heatLevel": 2
+  },
+  {
+    "text": "If we were in a zombie apocalypse, what role would you take?",
+    "options": ["The Leader", "The Scavenger", "The Fighter", "The First to Die"],
+    "category": "SCENARIO",
+    "heatLevel": 2
+  },
+  {
+    "text": "Would you rather have the ability to read minds or the ability to see 10 minutes into the future?",
+    "options": ["Read Minds", "See the Future"],
+    "category": "WOULD_YOU_RATHER",
+    "heatLevel": 2
+  },
+  {
+    "text": "Never Have I Ever lied to get out of hanging out with someone in this room.",
+    "options": ["I Have", "I Have Never"],
+    "category": "NEVER_HAVE_I_EVER",
+    "heatLevel": 5
+  },
+  {
+    "text": "What is the biggest red flag on a first date?",
+    "options": ["Being rude to the waiter", "Talking about their ex", "Being on their phone constantly", "Arriving 30 mins late"],
+    "category": "SPICY",
+    "heatLevel": 4
+  },
+  {
+    "text": "Would you rather always be 10 minutes late or always be 20 minutes early?",
+    "options": ["10 Minutes Late", "20 Minutes Early"],
+    "category": "WOULD_YOU_RATHER",
+    "heatLevel": 1
+  },
+  {
+    "text": "Never Have I Ever stolen something worth more than $50.",
+    "options": ["I Have", "I Have Never"],
+    "category": "NEVER_HAVE_I_EVER",
+    "heatLevel": 4
+  }
+]
