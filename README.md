@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://img.shields.io/badge/ReckonMe!-121212?style=for-the-badge&logo=react&logoColor=61DAFB" alt="ReckonMe! Logo" />
+  <img src="client/public/RMeLogo.png" alt="ReckonMe! Logo" width="200" />
   <h1>🚀 ReckonMe!</h1>
   <p><strong>The ultimate real-time multiplayer web party game. Guess your friends' answers and climb the leaderboard!</strong></p>
 
@@ -131,7 +131,7 @@ Want to run ReckonMe! locally? Follow these steps:
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/Sujal-0/ReckonMe-.git
+   git clone https://github.com/Sujal-0/ReckonMe..git
    cd ReckonMe!
    ```
 
@@ -157,7 +157,7 @@ Want to run ReckonMe! locally? Follow these steps:
 
 ## 🤝 Contributing
 
-Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/Sujal-0/ReckonMe-/issues).
+Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/Sujal-0/ReckonMe./issues).
 
 ## 📝 License
 
