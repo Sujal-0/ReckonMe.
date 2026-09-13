@@ -22,7 +22,9 @@ export default function initSocket(server) {
   if (sessionStore.useRedis && sessionStore.redisClient) {
     const pubClient = sessionStore.redisClient;
     const subClient = pubClient.duplicate();
-    Promise.all([pubClient.connect(), subClient.connect()]).then(() => {
+    
+    // pubClient is already connected by SessionStore
+    subClient.connect().then(() => {
       io.adapter(createAdapter(pubClient, subClient));
       console.log('✅ Socket.IO Redis Adapter initialized');
     }).catch(err => {
