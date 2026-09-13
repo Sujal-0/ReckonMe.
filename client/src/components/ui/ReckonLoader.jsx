@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Lottie from 'lottie-react';
 import loadingAnimation from '@/assets/Lotties/Loading.json';
 import { useState, useEffect } from 'react';
-import Particles from '@/components/Particles';
+import Particles from '@/components/particles';
 
 export const ReckonLoader = ({ text = "LOADING...", texts = null, speed = 800, isOverlay = false }) => {
   const [index, setIndex] = useState(0);
