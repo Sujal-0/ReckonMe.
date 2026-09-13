@@ -8,7 +8,7 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import Landing from "./pages/Landing";
 import JoinRoom from "./pages/JoinRoom";
-import Particles from "./components/Particles";
+import Particles from "./components/particles";
 import NotFound from "./pages/NotFound";
 import Results from "./pages/Results";
 import Game from "./pages/Game";
