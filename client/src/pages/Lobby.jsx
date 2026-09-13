@@ -32,8 +32,22 @@ const Lobby = () => {
   const [showLeaveModal, setShowLeaveModal] = useState(false);
 
   // Dynamic panels state
-  const [openPanels, setOpenPanels] = useState([]);
+  const [openPanels, setOpenPanels] = useState(() => {
+    try {
+      const saved = sessionStorage.getItem(`lobby_panels_${roomId}`);
+      if (saved) return JSON.parse(saved);
+    } catch (e) {
+      console.error("Failed to parse panels from sessionStorage", e);
+    }
+    return [];
+  });
   
+  useEffect(() => {
+    if (roomId) {
+      sessionStorage.setItem(`lobby_panels_${roomId}`, JSON.stringify(openPanels));
+    }
+  }, [openPanels, roomId]);
+
   const togglePanel = (panel) => {
     setOpenPanels((prev) => {
       if (prev.includes(panel)) {
@@ -328,7 +342,7 @@ const Lobby = () => {
   }
 
   return (
-    <div className="min-h-screen p-6 pb-40 md:pb-24 text-white bg-transparent overflow-x-hidden relative">
+    <div className="min-h-screen lg:h-screen p-6 pb-40 md:pb-24 lg:pb-12 text-white bg-transparent overflow-x-hidden lg:overflow-y-auto relative">
       {/* Header and Top Actions */}
       <div className="relative flex flex-col items-center mb-6 mt-4 max-w-6xl mx-auto w-full">
         <h1 className="mb-2 text-4xl font-bold lg:text-6xl font-['IndieSellout'] tracking-widest text-center">

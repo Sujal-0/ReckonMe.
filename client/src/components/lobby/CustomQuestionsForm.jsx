@@ -6,18 +6,54 @@ import { useAppStore } from "@/store";
 import { apiClient } from "@/lib/api-client";
 import { BulkUploadZone } from "../ui/BulkUploadZone";
 
-export const CustomQuestionsForm = ({ initialQuestions = [], onSave, isProfileMode = false }) => {
+export const CustomQuestionsForm = ({ initialQuestions = [], onSave, isProfileMode = false, roomId }) => {
   const { userInfo } = useAppStore();
-  const [questions, setQuestions] = useState(
+
+  const getInitialState = (key, fallback) => {
+    if (!isProfileMode && roomId) {
+      try {
+        const item = sessionStorage.getItem(`cq_${key}_${roomId}`);
+        if (item) return JSON.parse(item);
+      } catch (e) {
+        console.error("Failed to parse sessionStorage", e);
+      }
+    }
+    return fallback;
+  };
+
+  const [questions, setQuestions] = useState(() => getInitialState('questions', 
     initialQuestions.length > 0
       ? initialQuestions
       : [{ id: Date.now().toString(), text: "", options: ["", ""] }]
-  );
+  ));
   
   const [books, setBooks] = useState([]);
   const [showBookSelector, setShowBookSelector] = useState(false);
-  const [savingBookName, setSavingBookName] = useState("");
+  const [savingBookName, setSavingBookName] = useState(() => getInitialState('savingBookName', ""));
   const [isSavingBook, setIsSavingBook] = useState(false);
+  const [currentBook, setCurrentBook] = useState(() => getInitialState('currentBook', null));
+
+  useEffect(() => {
+    if (!isProfileMode && roomId) {
+      sessionStorage.setItem(`cq_questions_${roomId}`, JSON.stringify(questions));
+    }
+  }, [questions, isProfileMode, roomId]);
+
+  useEffect(() => {
+    if (!isProfileMode && roomId) {
+      if (currentBook) {
+        sessionStorage.setItem(`cq_currentBook_${roomId}`, JSON.stringify(currentBook));
+      } else {
+        sessionStorage.removeItem(`cq_currentBook_${roomId}`);
+      }
+    }
+  }, [currentBook, isProfileMode, roomId]);
+
+  useEffect(() => {
+    if (!isProfileMode && roomId) {
+      sessionStorage.setItem(`cq_savingBookName_${roomId}`, JSON.stringify(savingBookName));
+    }
+  }, [savingBookName, isProfileMode, roomId]);
 
   useEffect(() => {
     if (userInfo && !isProfileMode) {
@@ -41,6 +77,8 @@ export const CustomQuestionsForm = ({ initialQuestions = [], onSave, isProfileMo
        options: q.options
     }));
     setQuestions(mappedQuestions);
+    setCurrentBook({ _id: book._id, title: book.title });
+    setSavingBookName(book.title);
     setShowBookSelector(false);
     toast.success(`Loaded "${book.title}"`);
   };
@@ -61,14 +99,25 @@ export const CustomQuestionsForm = ({ initialQuestions = [], onSave, isProfileMo
     });
 
     try {
-      await apiClient.post('/api/question-books', {
-        title: savingBookName,
-        questions: formattedQuestions
-      }, { withCredentials: true });
+      if (currentBook) {
+        // Update existing book
+        await apiClient.put(`/api/question-books/${currentBook._id}`, {
+          title: savingBookName,
+          questions: formattedQuestions
+        }, { withCredentials: true });
+        toast.success("Book Updated!");
+        setCurrentBook({ ...currentBook, title: savingBookName });
+      } else {
+        // Create new book
+        const res = await apiClient.post('/api/question-books', {
+          title: savingBookName,
+          questions: formattedQuestions
+        }, { withCredentials: true });
+        toast.success("Saved to Profile!");
+        setCurrentBook({ _id: res.data._id, title: res.data.title });
+      }
       
-      toast.success("Saved to Profile!");
       setIsSavingBook(false);
-      setSavingBookName("");
       if (!isProfileMode) fetchBooks();
     } catch (err) {
       toast.error(err.response?.data?.error || "Failed to save book");
@@ -153,6 +202,12 @@ export const CustomQuestionsForm = ({ initialQuestions = [], onSave, isProfileMo
        options: q.options
     }));
 
+    if (!isProfileMode && roomId) {
+      sessionStorage.removeItem(`cq_questions_${roomId}`);
+      sessionStorage.removeItem(`cq_currentBook_${roomId}`);
+      sessionStorage.removeItem(`cq_savingBookName_${roomId}`);
+    }
+
     onSave(finalizedQuestions);
     toast.success(isProfileMode ? "Book settings saved!" : "Questions injected into Game Settings!");
   };
@@ -164,36 +219,72 @@ export const CustomQuestionsForm = ({ initialQuestions = [], onSave, isProfileMo
       options: q.options
     }));
     
+    // Deduplicate against existing questions
+    const existingTexts = new Set(questions.map(q => q.text.trim().toLowerCase()));
+    const uniqueValidQs = [];
+    let dupCount = 0;
+    
+    for (const q of validQs) {
+      const qTextLower = q.text.trim().toLowerCase();
+      if (!existingTexts.has(qTextLower)) {
+        existingTexts.add(qTextLower);
+        uniqueValidQs.push(q);
+      } else {
+        dupCount++;
+      }
+    }
+    
+    if (dupCount > 0) {
+      toast.info(`Skipped ${dupCount} duplicate questions.`);
+    }
+    
+    if (uniqueValidQs.length === 0) return;
+
     if (questions.length === 1 && questions[0].text === "" && questions[0].options[0] === "") {
-      setQuestions(validQs);
+      setQuestions(uniqueValidQs);
     } else {
-      setQuestions([...questions, ...validQs]);
+      setQuestions([...questions, ...uniqueValidQs]);
     }
   };
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4">
-        <div className="flex justify-between items-center pr-4">
-          <h3 className="text-2xl font-bold font-['IndieSellout'] tracking-widest text-white">
-            {isProfileMode ? "Book Editor" : "Custom Questions"}
-          </h3>
-          <span className="text-[#87CEFA] font-cabana tracking-widest">{questions.length} Active</span>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 pr-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
+            <h3 className="text-xl sm:text-2xl font-bold font-['IndieSellout'] tracking-widest text-white">
+              {isProfileMode ? "BOOK EDITOR" : "CUSTOM QUESTIONS"}
+            </h3>
+            {currentBook && !isProfileMode && (
+              <span className="px-2 py-0.5 bg-[#E48F45]/20 text-[#E48F45] border border-[#E48F45] text-xs font-cabana uppercase tracking-widest inline-flex items-center whitespace-nowrap">
+                Selected: {currentBook.title}
+              </span>
+            )}
+          </div>
+          <span className="text-[#87CEFA] font-cabana tracking-widest self-end sm:self-auto text-sm sm:text-base">{questions.length} Active</span>
         </div>
         
-        {userInfo && !isProfileMode && (
+        {!isProfileMode && (
           <div className="flex gap-2">
             <button 
-              onClick={() => { setShowBookSelector(!showBookSelector); setIsSavingBook(false); }}
+              onClick={() => { 
+                if (!userInfo) return toast.error("Sign in to load your custom books!");
+                setShowBookSelector(!showBookSelector); 
+                setIsSavingBook(false); 
+              }}
               className="flex-1 py-2 bg-white/10 text-white font-cabana text-sm uppercase tracking-widest hover:bg-white/20 transition-colors flex items-center justify-center gap-2 sketchy-shape border-2 border-[#87CEFA]"
             >
               <Download size={16} /> Load Book
             </button>
             <button 
-              onClick={() => { setIsSavingBook(!isSavingBook); setShowBookSelector(false); }}
+              onClick={() => { 
+                if (!userInfo) return toast.error("Sign in to save custom books!");
+                setIsSavingBook(!isSavingBook); 
+                setShowBookSelector(false); 
+              }}
               className="flex-1 py-2 bg-white/10 text-white font-cabana text-sm uppercase tracking-widest hover:bg-white/20 transition-colors flex items-center justify-center gap-2 sketchy-shape border-2 border-[#E48F45]"
             >
-              <Save size={16} /> Save as Book
+              <Save size={16} /> {currentBook ? "Update Book" : "Save as Book"}
             </button>
           </div>
         )}
@@ -224,7 +315,9 @@ export const CustomQuestionsForm = ({ initialQuestions = [], onSave, isProfileMo
           {isSavingBook && !isProfileMode && (
             <motion.div initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }} className="overflow-hidden">
                <div className="p-4 bg-black/50 sketchy-shape border-2 border-[#E48F45] flex flex-col gap-2 mt-2">
-                  <p className="text-[#E48F45] font-cabana text-sm uppercase tracking-widest mb-2">Save current questions to Profile:</p>
+                  <p className="text-[#E48F45] font-cabana text-sm uppercase tracking-widest mb-2">
+                    {currentBook ? "Update your saved Book:" : "Save current questions to Profile:"}
+                  </p>
                   <div className="flex gap-2">
                     <input 
                       type="text" 

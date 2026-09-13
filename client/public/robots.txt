@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Allow: /privacy
+Allow: /terms
+Disallow: /lobby/*
+Disallow: /game/*
+Disallow: /results/*
+
+Sitemap: https://reckonme.app/sitemap.xml

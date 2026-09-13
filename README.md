@@ -51,11 +51,16 @@ We have heavily focused on creating a premium, production-ready UI/UX prototype 
 - **Profile & Match History:** Comprehensive tracking of past games, leaderboards, and user statistics.
 - **Bulk Upload & Question Books:** Custom question managers allowing users to import CSV/JSON question packs dynamically.
 
-### Core Mechanics Complete
 - **Real-time Engine:** Full implementation of `Socket.io` event handling for rooms, chat, and game flow.
 - **Session Management:** Robust reconnects and room state handling.
 - **Turn-based State Machine:** Fully functional Lobby → Input Phase → Revealing Phase mechanics.
 - **Procedural Avatars:** Integration with DiceBear (Croodles) for instant, fun avatars.
+
+### Infrastructure & Security Ready
+- **Production Deployment Configured:** Ready for edge delivery with Vercel (Client) and Render (Server) configurations.
+- **Security Hardened:** Implemented rate limiting, strict CORS policies, and Helmet.js for robust protection against abuse.
+- **Legal & SEO Compliance:** Integrated Privacy Policy, Terms of Service, Cookie Consent banners, `robots.txt`, `sitemap.xml`, and Open Graph tags for optimal indexing and sharing.
+- **Scalable Architecture:** Configured Redis Pub/Sub Adapter for Socket.io to seamlessly sync state across multiple Node instances for handling massive concurrent traffic.
 
 ---
 
@@ -77,21 +82,17 @@ We have heavily focused on creating a premium, production-ready UI/UX prototype 
 
 ReckonMe! is continuously evolving. Here is our strategic roadmap for transitioning from a solid prototype to a globally scalable product:
 
-### 1. Backend Refactor & Scaling (Redis)
-- Set up a managed Redis instance to handle room state across multi-server deployments.
-- Implement `@socket.io/redis-adapter` to ensure high availability for up to 10k concurrent players.
-
-### 2. Gameplay Expansion & Content Pipeline
+### 1. Gameplay Expansion & Content Pipeline
 - Implement scoring logic (points per correct guess, speed bonuses).
 - Finalize the game results screen with a "Spotify Wrapped" style shareable scorecard.
-- Finalize the Question Seeder script to ingest millions of initial questions.
+- Finalize the Question Seeder script to ingest millions of initial questions (Reddit scraping scripts in progress).
 
-### 3. Load Testing & Infrastructure
+### 2. Load Testing & Edge Delivery
 - Stress test the WebSockets using Artillery or k6.
-- Dockerize client and server components.
-- Auto-scaling deployment (AWS ECS/EKS) with load balancing and strict rate limiting.
+- Dockerize client and server components for container orchestration alternatives.
+- Finalize Auto-scaling deployment (AWS ECS/EKS) with load balancing.
 
-### 4. Post-Launch Polish
+### 3. Post-Launch Polish
 - Integrate Howler.js for SFX and background music.
 - Add comprehensive telemetry and analytics (PostHog/Google Analytics).
 - i18n Localization for international audiences.

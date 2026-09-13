@@ -1,5 +1,11 @@
 import Question from "../models/QuestionModel.js";
 import { sessionStore } from "../socket/store/SessionStore.js";
+import fs from "fs/promises";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export const uploadQuestions = async (req, res) => {
   try {
@@ -165,5 +171,28 @@ export const deleteQuestion = async (req, res) => {
     res.status(200).json({ success: true });
   } catch (error) {
     res.status(500).json({ error: "Failed to delete question" });
+  }
+};
+
+export const getAIQuestions = async (req, res) => {
+  try {
+    const filePath = path.join(__dirname, "..", "scripts", "data", "ai_processed_data.json");
+    try {
+      const data = await fs.readFile(filePath, "utf-8");
+      const questions = JSON.parse(data);
+      // Format them exactly how the frontend staging area expects
+      const formatted = questions.map(q => ({
+        text: q.text,
+        options: q.options,
+        category: q.category.toUpperCase(),
+        heatLevel: 1, // Default heat level
+      }));
+      res.status(200).json({ success: true, questions: formatted });
+    } catch (fsError) {
+      // If file doesn't exist yet
+      res.status(200).json({ success: true, questions: [] });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch AI questions" });
   }
 };

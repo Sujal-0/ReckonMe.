@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import {
   Facebook,
   Twitter,
@@ -24,7 +25,7 @@ const Footer = () => {
         </div>
 
         {/* Links */}
-        <div className="flex gap-8 text-2xl font-medium">
+        <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8 text-xl md:text-2xl font-medium tracking-widest font-['indiesellout']">
           <button
             onClick={() => scrollToSection("How2Play")}
             className="hover:text-[#87CEFA] transition"
@@ -43,12 +44,22 @@ const Footer = () => {
           >
             Feedback
           </button>
-          <button
-            onClick={() => scrollToSection("privacy")}
+          
+          {/* Force a line break on mobile screens only */}
+          <div className="w-full md:hidden"></div>
+
+          <Link
+            to="/privacy"
             className="hover:text-[#87CEFA] transition"
           >
             Privacy
-          </button>
+          </Link>
+          <Link
+            to="/terms"
+            className="hover:text-[#87CEFA] transition"
+          >
+            Terms
+          </Link>
         </div>
 
         {/* Social Icons */}

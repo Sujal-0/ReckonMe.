@@ -24,10 +24,10 @@ export default function NotFound() {
           width={300}
           options={notFoundOptions}
         />
-        <h1 className="mt-4 text-5xl font-medium">Page Not Found :'(</h1>
+        <h1 className="mt-4 text-3xl sm:text-5xl font-medium">Page Not Found :'(</h1>
         <div>
           <button
-            className="px-16 py-2 text-3xl font-bold Stracking-wider bg-[#0A0A0A] text-[#ffffff] w-fit transition-all shadow-[3px_3px_0px_white] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] mt-10 flex items-center gap-4 group"
+            className="px-6 py-2 sm:px-16 sm:py-2 text-xl sm:text-3xl font-bold tracking-wider bg-[#0A0A0A] text-[#ffffff] w-fit transition-all shadow-[3px_3px_0px_white] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] mt-10 flex items-center gap-2 sm:gap-4 group"
             onClick={handleGoBack}
           >
             <ChevronLeft className="transition-transform duration-300 group-hover:-translate-x-3" />

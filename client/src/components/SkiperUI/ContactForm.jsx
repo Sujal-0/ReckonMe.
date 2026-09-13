@@ -82,7 +82,7 @@ const ContactForm = ({ open, setOpen }) => {
                     placeholder="Name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full px-4 py-2 text-2xl bg-transparent border-2 rounded-lg border-white/30 focus:outline-none"
+                    className="w-full px-4 py-2 text-2xl bg-transparent border-2 rounded-lg border-white/30 focus:outline-none font-['IndieSellout'] tracking-widest"
                     required
                   />
                 </div>
@@ -96,7 +96,7 @@ const ContactForm = ({ open, setOpen }) => {
                     placeholder="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-4 py-2 text-2xl bg-transparent border-2 rounded-lg border-white/30 focus:outline-none"
+                    className="w-full px-4 py-2 text-2xl bg-transparent border-2 rounded-lg border-white/30 focus:outline-none font-['IndieSellout'] tracking-widest"
                   />
                 </div>
 
@@ -108,8 +108,7 @@ const ContactForm = ({ open, setOpen }) => {
                     value={message}
                     placeholder="Message..."
                     onChange={(e) => setMessage(e.target.value)}
-                    className="w-full px-4 py-2 text-2xl bg-transparent border-2 rounded-lg border-white/30 focus:outline-none"
-                    rows={3}
+                    className="w-full px-4 py-2 text-2xl bg-transparent border-2 rounded-lg border-white/30 focus:outline-none min-h-[120px] font-['IndieSellout'] tracking-widest"
                     required
                   />
                 </div>

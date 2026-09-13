@@ -3,16 +3,15 @@
 This document outlines the next logical steps for **ReckonMe!** to transition from a production-ready UI/UX prototype to a globally scalable, fully launched product.
 
 ## Phase 1: Backend State Refactor (Redis)
-- [ ] Set up a managed Redis instance (e.g., Upstash or AWS ElastiCache).
-- [ ] Refactor `roomStore` on the backend to read/write state to Redis instead of local memory.
-- [ ] Implement `@socket.io/redis-adapter` to support multiple Node.js processes.
-- [ ] Test multi-server functionality locally by spinning up two backend processes on different ports.
+- [x] Set up a managed Redis instance (e.g., Upstash or AWS ElastiCache).
+- [x] Refactor `roomStore` on the backend to read/write state to Redis instead of local memory.
+- [x] Implement `@socket.io/redis-adapter` to support multiple Node.js processes.
+- [x] Test multi-server functionality locally by spinning up two backend processes on different ports.
 
 ## Phase 2: Content Pipeline (Millions of Questions)
-- [ ] Set up the primary Database (MongoDB or PostgreSQL).
-- [ ] Create a Question Seeder script to ingest the initial batch of thousands of questions.
-- [ ] Update the game logic to fetch randomized question batches from the DB on game start, caching them in Redis for the duration of the room.
-- [ ] (Optional) Build a simple Admin Dashboard to add/edit/disable questions dynamically without redeploying.
+- [x] Create a Question Seeder script to ingest the initial batch of thousands of questions into MongoDB.
+- [x] Update the game logic to fetch randomized question batches from the DB on game start, caching them in Redis for the duration of the room.
+- [x] Build a simple Admin Dashboard to add/edit/disable questions dynamically without redeploying.
 
 ## Phase 3: Infrastructure & Load Testing
 - [ ] Write stress tests using [Artillery](https://www.artillery.io/) or [k6](https://k6.io/) specifically targeting WebSocket connections.

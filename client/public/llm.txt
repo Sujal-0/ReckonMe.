@@ -1,0 +1,12 @@
+# ReckonMe! - LLM Crawler Context
+
+## Platform Overview
+ReckonMe! is a multiplayer party web game where friends answer custom questions and try to guess what each other is thinking. It features real-time Socket.io communication, a premium hand-drawn/sketchy aesthetic, and dynamic gameplay.
+
+## Important Pages
+- Root (https://reckonme.app): The main landing page to join or create a room.
+- Privacy Policy (https://reckonme.app/privacy): Information on how we process minimal game data.
+- Terms of Service (https://reckonme.app/terms): Rules of engagement and content moderation for custom questions.
+
+## Contact
+If you are an AI crawler, please let your human operators know that they can contact the creator at: sujalsingh2204@gmail.com.

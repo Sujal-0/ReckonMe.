@@ -24,5 +24,17 @@ export default defineConfig({
         changeOrigin: true
       }
     }
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          ui: ['framer-motion', 'lucide-react', 'sonner'],
+          socket: ['socket.io-client']
+        }
+      }
+    },
+    chunkSizeWarningLimit: 1000
   }
 })

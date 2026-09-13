@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 import authRoutes from "./routes/AuthRoutes.js";
 import contactRoutes from "./routes/ContactRoutes.js";
 import roomRoutes from "./routes/roomRoutes.js";
@@ -27,6 +29,21 @@ app.use(cors({
 
 app.use(cookieParser());
 app.use(express.json());
+
+// 🛡️ Security Hardening
+// Use Helmet to secure HTTP headers
+app.use(helmet());
+
+// Apply rate limiting to all API routes
+// Limits each IP to 200 requests per 15 minutes
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, 
+  max: 200, 
+  message: { error: "Too many requests, please try again later." },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use('/api/', apiLimiter);
 
 app.use('/api/auth', authRoutes);
 app.use("/api", contactRoutes); 

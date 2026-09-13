@@ -29,6 +29,7 @@ We have heavily focused on creating a premium, state-of-the-art interface that f
 
 ## Core Mechanics Completed
 - Real-time Socket.io communication.
-- Turn-based state management (currently in-memory on the Node server).
+- **MongoDB Database Integration**: Successfully integrated MongoDB via Mongoose. It now natively handles User Authentication (JWT), Room generation, Match History recording, and Custom Questions deduplication.
+- Dynamic game state tracking synced between MongoDB and memory for high-performance Socket.io broadcasting.
 - DiceBear integration for dynamic, seeded avatars.
 - Magic UI integrations for high-end particle effects (Confetti).

@@ -55,7 +55,7 @@ export const ChangeNameUI = ({
                 onChange={(e) => setPlayerName(e.target.value.toUpperCase())}
                 placeholder="Enter your name..."
                 maxLength={12}
-                className="flex-1 px-4 py-2 rounded-none bg-transparent text-2xl font-bold text-white placeholder-white/50 focus:outline-none border-0 border-b-2 transition-colors uppercase font-cabana"
+                className="flex-1 px-4 py-2 rounded-none bg-transparent text-2xl font-bold text-white placeholder-white/50 focus:outline-none border-0 border-b-2 transition-colors uppercase font-['IndieSellout'] tracking-widest"
                 disabled={isSubmittingName}
               />
               {nameError && <p className="text-sm text-center text-red-400 font-cabana tracking-widest">{nameError}</p>}
@@ -119,7 +119,24 @@ export const GameSetup = ({
   onRequestAccess,
   isAnyPanelOpen,
 }) => {
-  const [showQuestionModal, setShowQuestionModal] = useState(false);
+  const [showQuestionModal, setShowQuestionModal] = useState(() => {
+    try {
+      if (room?.roomId) {
+        const saved = sessionStorage.getItem(`cq_modal_${room.roomId}`);
+        if (saved) return JSON.parse(saved);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return false;
+  });
+  
+  useEffect(() => {
+    if (room?.roomId) {
+      sessionStorage.setItem(`cq_modal_${room.roomId}`, JSON.stringify(showQuestionModal));
+    }
+  }, [showQuestionModal, room?.roomId]);
+
   const [questionMode, setQuestionMode] = useState(room?.settings?.questionMode || "random");
   const [customBank, setCustomBank] = useState(room?.settings?.customQuestions || []);
   const [categories, setCategories] = useState(room?.settings?.categories || []);
@@ -449,7 +466,7 @@ export const GameSetup = ({
       {showQuestionModal && (
         <div className="fixed inset-0 z-50 p-4 pb-32 md:p-8 md:pb-8 overflow-y-auto bg-black/80 backdrop-blur-sm flex justify-center items-start">
           <div className="relative w-full max-w-3xl p-6 mb-32 md:mb-0 bg-[#0A0A0A] cartoon-dashed-border rounded-2xl mt-10 shadow-2xl">
-            <CustomQuestionsForm initialQuestions={customBank} onSave={handleSaveQuestions} />
+            <CustomQuestionsForm initialQuestions={customBank} onSave={handleSaveQuestions} roomId={room?.roomId} />
             <button
               onClick={() => setShowQuestionModal(false)}
               className="absolute top-4 right-4 text-white/50 hover:text-white"

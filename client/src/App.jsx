@@ -23,6 +23,9 @@ import { useAppStore } from "./store";
 import { useEffect, useState } from "react";
 import RoomAccessLayout from "./components/RoomAccessLayout";
 import { ReckonLoader } from "./components/ui/ReckonLoader";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import Terms from "./pages/Terms";
+import { CookieBanner } from "./components/ui/CookieBanner";
 
 const PrivateRoute = ({ children, loading }) => {
   const { userInfo } = useAppStore();
@@ -44,6 +47,14 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // If userInfo is already fetched (object or null), stop loading
+    if (userInfo !== undefined) {
+      setLoading(false);
+      return;
+    }
+
+    let retries = 2; // Allow up to 2 retries (e.g. for simulator extensions)
+
     const getUserData = async () => {
       try {
         const response = await apiClient.get(GET_USER_INFO, {
@@ -52,20 +63,21 @@ function App() {
         if (response.status === 200 && response.data.id) {
           setUserInfo(response.data);
         } else {
-          setUserInfo(undefined);
+          setUserInfo(null);
         }
-        console.log({ response });
-      } catch (error) {
-        setUserInfo(undefined);
-      } finally {
         setLoading(false);
+      } catch (error) {
+        if (retries > 0) {
+          retries -= 1;
+          setTimeout(getUserData, 500); // Wait 500ms and retry
+        } else {
+          setUserInfo(null);
+          setLoading(false);
+        }
       }
     };
-    if (!userInfo) {
-      getUserData();
-    } else {
-      setLoading(false);
-    }
+
+    getUserData();
   }, [userInfo, setUserInfo]);
 
   if (loading) {
@@ -95,6 +107,7 @@ function App() {
       {/* Foreground Content with Animation */}
       <AnimatedRoutes />
       <SmoothCursor />
+      <CookieBanner />
     </BrowserRouter>
   );
 }
@@ -150,6 +163,22 @@ function AnimatedRoutes() {
           element={
             <PageWrapper>
               <AdminDashboard />
+            </PageWrapper>
+          }
+        />
+        <Route
+          path="/privacy"
+          element={
+            <PageWrapper>
+              <PrivacyPolicy />
+            </PageWrapper>
+          }
+        />
+        <Route
+          path="/terms"
+          element={
+            <PageWrapper>
+              <Terms />
             </PageWrapper>
           }
         />

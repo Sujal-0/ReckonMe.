@@ -40,6 +40,31 @@ select {
   cursor: text !important;
 }
 
+/* Custom Global Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #f0f0f0; /* Off-white */
+  border-radius: 0px; /* Sharp edges for neo-brutalism */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00E5FF; /* Cyan neon hover */
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #f0f0f0 transparent;
+}
+
 
 @theme inline {
   --font-cabana: "Cabana", sans-serif;

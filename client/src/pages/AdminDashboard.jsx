@@ -111,6 +111,22 @@ export const AdminDashboard = () => {
     }
   };
 
+  const handleFetchAIQuestions = async () => {
+    try {
+      const res = await apiClient.get("/api/admin/ai-questions", {
+        headers: { "x-admin-secret": secret }
+      });
+      if (res.data.questions && res.data.questions.length > 0) {
+        setQuestions(prev => [...prev, ...res.data.questions]);
+        toast.success(`Loaded ${res.data.questions.length} AI-processed questions into staging.`);
+      } else {
+        toast.info("No AI questions found in the data file.");
+      }
+    } catch (err) {
+      toast.error("Failed to fetch AI questions");
+    }
+  };
+
   // Live Database Actions
   const handleUpdateLiveQuestion = async (id, updatedData) => {
     try {
@@ -208,7 +224,7 @@ export const AdminDashboard = () => {
                         setLiveQuestions(updated);
                       }
                     }}
-                    className="w-full bg-black/40 border-2 border-white/20 p-2 text-lg focus:border-[#87CEFA] focus:outline-none min-h-[80px] resize-y"
+                    className="w-full bg-black/40 border-2 border-white/20 p-2 text-lg focus:border-[#87CEFA] focus:outline-none min-h-[80px] resize-y font-cabana"
                   />
                 </div>
                 
@@ -229,7 +245,7 @@ export const AdminDashboard = () => {
                           setLiveQuestions(updated);
                         }
                       }}
-                      className="w-full bg-black/40 border-2 border-white/20 p-2 focus:border-[#87CEFA] focus:outline-none"
+                      className="w-full bg-black/40 border-2 border-white/20 p-2 focus:border-[#87CEFA] focus:outline-none font-cabana"
                     />
                   ))}
                 </div>
@@ -249,7 +265,7 @@ export const AdminDashboard = () => {
                         setLiveQuestions(updated);
                       }
                     }}
-                    className="w-full bg-black/40 border-2 border-white/20 p-2 focus:border-[#87CEFA] focus:outline-none text-[#E48F45] uppercase text-sm"
+                    className="w-full bg-black/40 border-2 border-white/20 p-2 focus:border-[#87CEFA] focus:outline-none text-[#E48F45] uppercase text-sm font-cabana tracking-wide"
                   />
                   <input 
                     type="number"
@@ -359,7 +375,7 @@ export const AdminDashboard = () => {
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between pb-6 border-b-4 border-white/10 border-dashed gap-4 md:gap-0">
           <div>
             <h1 className="text-3xl sm:text-5xl font-bold text-[#87CEFA] tracking-widest mb-1 sm:mb-2 leading-tight">RECKONME! CONTROL CENTER</h1>
-            <p className="text-[#00E5FF] text-base sm:text-xl tracking-wider">Manage the Global Question Database</p>
+            <p className="text-[#00E5FF] text-base sm:text-xl tracking-wider font-cabana">Manage the Global Question Database</p>
           </div>
           <button 
             onClick={() => setIsAuthenticated(false)} 
@@ -395,7 +411,7 @@ export const AdminDashboard = () => {
                       {getSortedCategories().map(c => (
                         <div key={c.category} className="flex justify-between items-center text-lg bg-white/5 p-2 border border-white/10">
                           <span className="text-[#E48F45] tracking-wider">{c.category}</span>
-                          <span className="font-bold">{c.count}</span>
+                          <span className="font-bold font-cabana">{c.count}</span>
                         </div>
                       ))}
                       {(!stats.categories || stats.categories.length === 0) && (
@@ -424,6 +440,15 @@ export const AdminDashboard = () => {
             
             {/* Upload Box */}
             <BulkUploadZone onUploadSuccess={handleBulkUploadSuccess} />
+            
+            {/* Pull AI Batch Button */}
+            <button 
+              onClick={handleFetchAIQuestions}
+              className="w-full flex items-center justify-center gap-3 p-6 font-bold bg-[#E48F45]/10 text-[#E48F45] border-4 border-[#E48F45] text-2xl tracking-widest transition-all shadow-[6px_6px_0px_rgba(228,143,69,0.2)] hover:shadow-none hover:translate-x-[6px] hover:translate-y-[6px]"
+            >
+              <Database size={28} />
+              PULL AI-PROCESSED BATCH
+            </button>
 
             {/* Pending Questions Overview */}
             {questions.length > 0 && (
@@ -463,14 +488,14 @@ export const AdminDashboard = () => {
                   {questions.slice(0, 10).map((q, i) => (
                     <div key={i} className="flex flex-col md:flex-row md:items-center gap-4 bg-white/5 border-2 border-white/10 p-4 shadow-[4px_4px_0px_rgba(0,0,0,0.5)]">
                       <div className="flex gap-2 shrink-0">
-                        <span className="px-3 py-1 bg-[#E48F45] text-black font-bold text-sm tracking-widest uppercase">{q.category}</span>
+                        <span className="px-3 py-1 bg-[#E48F45] text-black font-bold text-sm tracking-widest uppercase font-cabana">{q.category}</span>
                         <span className="px-3 py-1 bg-rose-500 text-white font-bold text-sm tracking-widest uppercase">HEAT: {q.heatLevel}</span>
                       </div>
                       <div className="flex-1">
-                        <p className="text-white text-xl mb-2">{q.text}</p>
+                        <p className="text-white text-xl mb-2 font-cabana tracking-wide">{q.text}</p>
                         <div className="flex flex-wrap gap-2">
                           {q.options?.map((opt, oIdx) => (
-                            <span key={oIdx} className="px-2 py-1 border border-white/20 text-white/60 text-xs bg-black/50">
+                            <span key={oIdx} className="px-2 py-1 border border-white/20 text-white/60 text-xs bg-black/50 font-cabana tracking-wide">
                               {opt}
                             </span>
                           ))}

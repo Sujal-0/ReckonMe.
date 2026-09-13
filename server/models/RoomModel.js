@@ -5,6 +5,7 @@ const playerSchema = new mongoose.Schema({
   id: { type: String, required: true },
   name: { type: String, default: "" }, // name set in lobby
   avatarSeed: { type: String, default: "" }, // seed for DiceBear avatar
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "Users", default: null }, // Links to authenticated user
   score: { type: Number, default: 0 },
   isHost: { type: Boolean, default: false },
   ready: { type: Boolean, default: false },
