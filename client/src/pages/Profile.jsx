@@ -23,6 +23,10 @@ const Profile = () => {
   const [avatarSeed, setAvatarSeed] = useState(userInfo?.avatarSeed || userInfo?.username || "default");
   const [isUpdatingAvatar, setIsUpdatingAvatar] = useState(false);
 
+  // Delete Account State
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
   useEffect(() => {
     fetchHistory();
     if (userInfo && userInfo.avatarSeed) {
@@ -54,6 +58,23 @@ const Profile = () => {
       }
     } catch (error) {
       console.error("Logout failed:", error);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    try {
+      setDeleting(true);
+      const res = await apiClient.delete("/api/auth/delete-account", { withCredentials: true });
+      if (res.data.success) {
+        setUserInfo(null);
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Failed to delete account:", error);
+      alert("Failed to delete account. Please try again.");
+    } finally {
+      setDeleting(false);
+      setShowDeleteModal(false);
     }
   };
 
@@ -166,6 +187,15 @@ const Profile = () => {
                    CUSTOM BOOKS
                  </button>
               </div>
+
+              <div className="hidden lg:block w-full mt-4 lg:mt-8 pt-4 lg:pt-8 border-t-2 border-white/10">
+                 <button 
+                   onClick={() => setShowDeleteModal(true)}
+                   className="w-full p-2 sm:py-4 sm:px-6 font-['IndieSellout'] text-sm sm:text-xl lg:text-2xl tracking-widest text-center border-4 transition-all bg-red-950 text-white border-red-700 hover:bg-red-900 shadow-[4px_4px_0px_rgba(255,0,0,0.5)] hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px]"
+                 >
+                   DELETE ACCOUNT
+                 </button>
+              </div>
            </div>
 
            {/* Right Content Area */}
@@ -265,6 +295,64 @@ const Profile = () => {
 
         </div>
       </div>
+
+      {/* Mobile Delete Account */}
+      <div className="block lg:hidden w-full max-w-7xl mx-auto px-4 mt-2 pb-12">
+          <div className="w-full pt-8 border-t-2 border-white/10">
+             <button 
+               onClick={() => setShowDeleteModal(true)}
+               className="w-full py-4 px-6 font-['IndieSellout'] text-xl tracking-widest text-center border-4 transition-all bg-red-950 text-white border-red-700 active:bg-red-900 shadow-[4px_4px_0px_rgba(255,0,0,0.5)] active:shadow-none active:translate-x-[4px] active:translate-y-[4px]"
+             >
+               DELETE ACCOUNT
+             </button>
+          </div>
+      </div>
+
+      {/* Delete Account Modal */}
+      <AnimatePresence>
+        {showDeleteModal && (
+          <>
+            <motion.div
+              className="fixed inset-0 z-40 bg-black/80 backdrop-blur-sm"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowDeleteModal(false)}
+            />
+            <motion.div
+              className="fixed top-1/2 left-1/2 z-50 w-[90%] max-w-[400px] bg-[#0A0A0A] p-6 text-center shadow-[8px_8px_0px_rgba(255,0,0,0.5)] border-4 border-red-600 sketchy-shape flex flex-col"
+              initial={{ opacity: 0, scale: 0.8, y: "-50%", x: "-50%" }}
+              animate={{ opacity: 1, scale: 1, y: "-50%", x: "-50%" }}
+              exit={{ opacity: 0, scale: 0.8, y: "-50%", x: "-50%" }}
+              transition={{ type: "spring", stiffness: 200, damping: 20 }}
+            >
+              <h2 className="text-3xl font-['IndieSellout'] text-red-500 uppercase tracking-widest mb-2">
+                Danger Zone
+              </h2>
+              <p className="font-cabana text-lg text-white/80 mb-6 leading-tight">
+                Are you sure you want to permanently delete your account? This action cannot be undone. All your custom question books will be destroyed.
+              </p>
+
+              <div className="flex gap-4">
+                <button
+                  onClick={() => setShowDeleteModal(false)}
+                  className="flex-1 px-4 py-2 text-xl font-bold font-['IndieSellout'] bg-white text-black border-2 border-white shadow-[2px_2px_0px_black] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]"
+                >
+                  CANCEL
+                </button>
+                <button
+                  onClick={handleDeleteAccount}
+                  disabled={deleting}
+                  className="flex-1 px-4 py-2 text-xl font-bold font-['IndieSellout'] bg-red-600 text-white border-2 border-white shadow-[2px_2px_0px_black] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]"
+                >
+                  {deleting ? "DELETING..." : "DELETE"}
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 };

@@ -12,6 +12,8 @@ export const SmartChat = ({ messages, onSendMessage, isOpen, onToggle, positionC
   const { getPlayers } = useRoomStore();
   const players = getPlayers();
 
+  const prevMessageCountRef = useRef(messages.length);
+
   // Auto-scroll to bottom
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -19,10 +21,14 @@ export const SmartChat = ({ messages, onSendMessage, isOpen, onToggle, positionC
 
   useEffect(() => {
     if (isOpen) {
-      scrollToBottom();
       setUnreadCount(0);
-    } else if (messages.length > 0) {
-      setUnreadCount((prev) => prev + 1);
+      prevMessageCountRef.current = messages.length;
+      scrollToBottom();
+    } else {
+      if (messages.length > prevMessageCountRef.current) {
+        setUnreadCount((prev) => prev + (messages.length - prevMessageCountRef.current));
+      }
+      prevMessageCountRef.current = messages.length;
     }
   }, [messages, isOpen]);
 
@@ -60,6 +66,15 @@ export const SmartChat = ({ messages, onSendMessage, isOpen, onToggle, positionC
       <AnimatePresence>
         {isOpen && (
           <>
+            {/* Click-outside transparent overlay */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-40 bg-transparent"
+              onClick={onToggle}
+            />
+            
             <motion.div
               initial={{ x: "100%" }}
               animate={{ x: 0 }}

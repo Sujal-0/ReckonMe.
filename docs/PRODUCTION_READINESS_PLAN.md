@@ -46,8 +46,8 @@ Currently, MongoDB handles persistence, but WebSockets are bound to a single ser
 - **Action**: Fetch a batch of questions *once* when the room starts, store them in Redis, and serve them from memory.
 
 ### 4. Infrastructure & Edge Delivery
-- **CDN for Static Assets**: The React frontend must be hosted on an Edge Network (Vercel, Cloudflare Pages, AWS CloudFront) so the Node.js backend only spends CPU cycles on game logic, not serving HTML/JS files.
-- **Auto-Scaling Backend**: Deploy the Node server using a service that scales automatically based on CPU usage (e.g., AWS ECS, Render, or Kubernetes).
+- [x] **CDN for Static Assets**: The React frontend must be hosted on an Edge Network (Vercel, Cloudflare Pages, AWS CloudFront) so the Node.js backend only spends CPU cycles on game logic, not serving HTML/JS files.
+- [x] **Auto-Scaling Backend**: Deploy the Node server using a service that scales automatically based on CPU usage (e.g., AWS ECS, Render, or Kubernetes).
 
 ## 📈 Observability & Post-Launch
 

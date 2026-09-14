@@ -19,10 +19,10 @@ This document outlines the next logical steps for **ReckonMe!** to transition fr
 - [ ] Configure Dockerfiles for both Client and Server for containerized deployment.
 
 ## Phase 4: Production Deployment
-- [ ] Deploy the Client (Vite build) to Vercel, Netlify, or Cloudflare Pages for CDN-backed speed.
-- [ ] Deploy the Server to AWS (ECS/EKS) or Render with Auto-scaling enabled.
-- [ ] Configure the Load Balancer with Sticky Sessions.
-- [ ] Implement strict CORS policies and Rate Limiting to secure the live endpoints.
+- [x] Deploy the Client (Vite build) to Vercel, Netlify, or Cloudflare Pages for CDN-backed speed.
+- [x] Deploy the Server to AWS (ECS/EKS) or Render with Auto-scaling enabled.
+- [x] Configure the Load Balancer with Sticky Sessions (Handled by Socket.io Redis Adapter).
+- [x] Implement strict CORS policies and Rate Limiting to secure the live endpoints.
 
 ## Phase 5: Post-Launch Polish
 - [ ] Add sound effects (SFX) and background music (BGM) utilizing the Howler.js library.

@@ -166,7 +166,7 @@ export default function Landing() {
             Created By -
           </span>
           <MorphingText
-            texts={["Me", "Sujal", "Web Developer", "An Avid Learner"]}
+            texts={["SamColon", "Sujal", "Code Wizard", "Certified Yapper", "Web Developer"]}
             className="font-['IndieSellout'] block px-2 sm:px-4 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight tracking-widest mt-4"
           />
         </div>

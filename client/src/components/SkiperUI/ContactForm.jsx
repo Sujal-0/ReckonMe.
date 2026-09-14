@@ -14,24 +14,30 @@ const ContactForm = ({ open, setOpen }) => {
   async function submit() {
     setFormState("loading");
 
-    const response = await apiClient.post(MESSAGE_ROUTE, {
-      name,
-      email,
-      message,
-    });
+    try {
+      const response = await apiClient.post(MESSAGE_ROUTE, {
+        name,
+        email,
+        message,
+      });
 
-    // reset and close after 3.3s
-    if (response.status === 201) {
-      setFormState("success");
-      setTimeout(() => {
-        setOpen(false);
+      // reset and close after 3.3s
+      if (response.status === 201) {
+        setFormState("success");
+        setTimeout(() => {
+          setOpen(false);
+          setFormState("idle");
+          setName("");
+          setEmail("");
+          setMessage("");
+        }, 3300);
+      } else {
+        alert("Something went wrong!");
         setFormState("idle");
-        setName("");
-        setEmail("");
-        setMessage("");
-      }, 3300);
-    } else {
-      alert("Something went wrong!");
+      }
+    } catch (error) {
+      console.error("Contact submit error:", error);
+      alert("Failed to send message. The server might be misconfigured.");
       setFormState("idle");
     }
   }
@@ -108,7 +114,7 @@ const ContactForm = ({ open, setOpen }) => {
                     value={message}
                     placeholder="Message..."
                     onChange={(e) => setMessage(e.target.value)}
-                    className="w-full px-4 py-2 text-2xl bg-transparent border-2 rounded-lg border-white/30 focus:outline-none min-h-[120px] font-['IndieSellout'] tracking-widest"
+                    className="w-full px-4 py-2 text-2xl bg-transparent border-2 rounded-lg border-white/30 focus:outline-none min-h-[120px] font-cabana tracking-widest"
                     required
                   />
                 </div>

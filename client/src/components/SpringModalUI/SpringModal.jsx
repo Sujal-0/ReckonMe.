@@ -202,7 +202,7 @@ const SpringModal = ({ isOpen, setIsOpen }) => {
                     value={roomCode}
                     onChange={handleCodeChange}
                     placeholder="CODE..."
-                    className="flex-1 px-4 py-2 rounded-none bg-transparent uppercase text-2xl font-bold text-white placeholder-white/50 focus:outline-none border-2 border-white transition-all shadow-[3px_3px_0px_white] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] font-cabana"
+                    className="flex-1 px-4 py-2 rounded-none bg-transparent uppercase text-2xl font-bold text-white placeholder-white/50 focus:outline-none border-2 border-white transition-all shadow-[3px_3px_0px_white] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] font-['IndieSellout']"
                     disabled={creating || joining}
                   />
                   <button
