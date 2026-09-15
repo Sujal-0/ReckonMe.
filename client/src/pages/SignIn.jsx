@@ -11,6 +11,7 @@ import { toast } from "sonner";
 export default function SignIn() {
   const [identifier, setIdentifier] = useState(""); // email OR username
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { setUserInfo } = useAppStore();
 
@@ -28,20 +29,25 @@ export default function SignIn() {
   };
 
   const handleSignin = async () => {
-    // console.log("Login payload:", payload);
-
-    // Send payload to your API here
     if (validateSignin()) {
-      const payload = { identifier, password };
-      const response = await apiClient.post(LOGIN_ROUTE, payload, {
-        withCredentials: true,
-      });
-      if (response.data.user.id) {
-        setUserInfo(response.data.user);
-        navigate("/");
-        toast.success("Login successful");
+      setIsLoading(true);
+      try {
+        const payload = { identifier, password };
+        const response = await apiClient.post(LOGIN_ROUTE, payload, {
+          withCredentials: true,
+        });
+        if (response.data.user.id) {
+          setUserInfo(response.data.user);
+          toast.success("Login successful");
+          navigate("/");
+        }
+      } catch (error) {
+        console.error("Login error:", error);
+        const errorMsg = error.response?.data || "An error occurred during login. Please try again.";
+        toast.error(errorMsg);
+      } finally {
+        setIsLoading(false);
       }
-      console.log({ response });
     }
   };
 
@@ -87,10 +93,11 @@ export default function SignIn() {
             className="flex-1 px-4 py-1 mt-4 rounded-none bg-transparent text-xl sm:text-2xl font-medium text-white placeholder-white/50 focus:outline-none border-0 border-b-2 transition-all shadow-[3px_3px_0px_white] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] font-['IndieSellout'] tracking-widest leading-tight"
           />
           <button
-            className="px-4 sm:px-10 py-2 font-medium mt-6 bg-[#0A0A0A] text-[#ffffff] text-xl sm:text-2xl w-full transition-all shadow-[3px_3px_0px_white] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px]"
+            className="px-4 sm:px-10 py-2 font-medium mt-6 bg-[#0A0A0A] text-[#ffffff] text-xl sm:text-2xl w-full transition-all shadow-[3px_3px_0px_white] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={handleSignin}
+            disabled={isLoading}
           >
-            Sign In
+            {isLoading ? "Signing In..." : "Sign In"}
           </button>
         </div>
       </motion.div>

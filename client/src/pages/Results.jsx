@@ -13,6 +13,7 @@ const Results = () => {
   const [step, setStep] = useState(0); // 0 = Winner Reveal, 1 = Summary
   const [isWaiting, setIsWaiting] = useState(false);
   const [isRestarting, setIsRestarting] = useState(false);
+  const [opponentLeft, setOpponentLeft] = useState(false);
 
   useEffect(() => {
     if (!room || !player) {
@@ -96,8 +97,20 @@ const Results = () => {
           navigate(`/lobby/${room.roomId}`);
         }, 1800);
      };
+     
+     const handleDisconnect = () => {
+       setOpponentLeft(true);
+       setIsWaiting(false);
+       toast.error("Your opponent has left the match.");
+     };
+
      socket.on("room-restarted", handleRestart);
-     return () => socket.off("room-restarted", handleRestart);
+     socket.on("player-disconnected", handleDisconnect);
+     
+     return () => {
+       socket.off("room-restarted", handleRestart);
+       socket.off("player-disconnected", handleDisconnect);
+     };
   }, [navigate, room.roomId]);
 
   const handleLeaveHome = () => {
@@ -276,19 +289,21 @@ const Results = () => {
              HOME
            </motion.button>
            
-           <motion.button 
-             onClick={handlePlayAgain}
-             disabled={hasClickedPlayAgain}
-             whileHover={!hasClickedPlayAgain ? { scale: 1.05 } : {}}
-             whileTap={!hasClickedPlayAgain ? { scale: 0.95 } : {}}
-             className={`px-6 py-3 text-sm md:text-lg font-bold tracking-[0.1em] border-2 border-white uppercase transition-all ${
-               hasClickedPlayAgain
-                 ? "bg-white text-black opacity-75 cursor-not-allowed shadow-none translate-x-[4px] translate-y-[4px]"
-                 : "bg-[#E48F45] text-black shadow-[4px_4px_0px_white] hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none"
-             }`}
-           >
-             {hasClickedPlayAgain ? "WAITING..." : "PLAY AGAIN"}
-           </motion.button>
+           {!opponentLeft && (
+             <motion.button 
+               onClick={handlePlayAgain}
+               disabled={hasClickedPlayAgain}
+               whileHover={!hasClickedPlayAgain ? { scale: 1.05 } : {}}
+               whileTap={!hasClickedPlayAgain ? { scale: 0.95 } : {}}
+               className={`px-6 py-3 text-sm md:text-lg font-bold tracking-[0.1em] border-2 border-white uppercase transition-all ${
+                 hasClickedPlayAgain
+                   ? "bg-white text-black opacity-75 cursor-not-allowed shadow-none translate-x-[4px] translate-y-[4px]"
+                   : "bg-[#E48F45] text-black shadow-[4px_4px_0px_white] hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none"
+               }`}
+             >
+               {hasClickedPlayAgain ? "WAITING..." : "PLAY AGAIN"}
+             </motion.button>
+           )}
        </div>
     </motion.div>
   );

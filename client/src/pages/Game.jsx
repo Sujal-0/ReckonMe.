@@ -15,7 +15,9 @@ const Game = () => {
   const navigate = useNavigate();
   const { room, player } = useRoomStore();
   const [isSubmittingPreGame, setIsSubmittingPreGame] = useState(false);
-  const [waitingForOthers, setWaitingForOthers] = useState(false);
+  const [waitingForOthers, setWaitingForOthers] = useState(
+    () => room?.preGameInputs?.some((p) => p.playerId === player?.id) || false
+  );
   const [phaseTimer, setPhaseTimer] = useState(null);
   
   // Chat state
@@ -256,90 +258,91 @@ const Game = () => {
         )}
       </AnimatePresence>
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col relative w-full h-screen overflow-y-auto z-0" onScroll={handleScroll}>
-          
-          {/* Phase Header UI */}
-          {phase && phase !== "category-reveal" && phase !== "finished" && (
-             <div className="sticky top-0 left-0 w-full h-0 z-50 pointer-events-none">
-               {/* Round UI (Top-Left, offset so it doesn't clash with Leaderboard) */}
-               <div className={`absolute top-4 left-14 md:left-20 lg:top-12 lg:left-[450px] z-10 pointer-events-none origin-top-left transition-all duration-300 ${isScrolled ? 'scale-[0.5] md:scale-[0.6] lg:scale-75' : 'scale-[0.65] md:scale-75 lg:scale-100'}`}>
-                 <div className={`pointer-events-auto bg-black/60 backdrop-blur-md border-2 border-white shadow-[4px_4px_0px_white] rounded-none transition-all duration-300 ${isScrolled ? 'px-3 py-1.5' : 'px-6 py-3'}`}>
-                   <div className={`text-[#87CEFA] tracking-widest font-bold uppercase whitespace-nowrap transition-all duration-300 ${isScrolled ? 'text-xl' : 'text-2xl'}`}>
-                     {!isScrolled && "ROUND "}{currentRound?.roundNumber} <span className="text-white/30">{isScrolled ? '/' : ' / '} {room.rounds?.length}</span>
-                   </div>
-                 </div>
+
+      {/* Fixed Phase Header UI */}
+      {phase && phase !== "category-reveal" && phase !== "finished" && (
+         <div className="absolute top-0 left-0 w-full z-50 pointer-events-none flex justify-between pl-16 pr-4 md:pl-24 lg:pl-[450px] lg:pr-12 pt-4 lg:pt-12 items-start h-[100px] lg:h-[140px]">
+           {/* Round UI (Left) */}
+           <div className={`pointer-events-none origin-top-left transition-all duration-300 ${isScrolled ? 'scale-[0.65] md:scale-75 lg:scale-75' : 'scale-[0.8] md:scale-100 lg:scale-100'}`}>
+             <div className={`pointer-events-auto bg-black/60 backdrop-blur-md border-2 border-white shadow-[4px_4px_0px_white] rounded-none transition-all duration-300 ${isScrolled ? 'px-3 py-1.5' : 'px-6 py-3'}`}>
+               <div className={`text-[#87CEFA] tracking-widest font-bold uppercase whitespace-nowrap transition-all duration-300 ${isScrolled ? 'text-xl' : 'text-2xl'}`}>
+                 {!isScrolled && "ROUND "}{currentRound?.roundNumber} <span className="text-white/30">{isScrolled ? '/' : ' / '} {room.rounds?.length}</span>
                </div>
-
-               {/* Timer UI (Top-Right) */}
-               {phaseTimer && (
-                 <div className="absolute top-4 lg:top-12 right-4 lg:right-12 z-10 pointer-events-none flex flex-col items-end gap-1 lg:gap-2">
-                    <div className="flex items-center gap-2">
-                      <div className={`flex items-center font-bold font-['IndieSellout'] text-3xl lg:text-5xl h-10 lg:h-14 overflow-hidden relative min-w-[60px] lg:min-w-[80px] justify-center tabular-nums pointer-events-auto ${phaseTimer.timeLeft <= 10 ? 'text-red-600 animate-pulse' : 'text-rose-400'}`}>
-                        {phaseTimer.timeLeft.toString().split('').map((digit, i) => (
-                          <div key={`${phaseTimer.timeLeft.toString().length}-${i}`} className="relative inline-flex justify-center">
-                            <AnimatePresence mode="popLayout">
-                              <motion.span
-                                key={digit}
-                                initial={{ y: "100%", opacity: 0 }}
-                                animate={{ y: "0%", opacity: 1 }}
-                                exit={{ y: "-100%", opacity: 0 }}
-                                transition={{ duration: 0.4, ease: "backOut" }}
-                                className="inline-block"
-                              >
-                                {digit}
-                              </motion.span>
-                            </AnimatePresence>
-                          </div>
-                        ))}
-                        <span className="inline-block ml-1">s</span>
-                      </div>
-                      
-                      {/* Show close button here when scrolled */}
-                      <AnimatePresence>
-                        {isScrolled && (
-                          <motion.button
-                            initial={{ opacity: 0, scale: 0.5, width: 0 }}
-                            animate={{ opacity: 1, scale: 1, width: "auto" }}
-                            exit={{ opacity: 0, scale: 0.5, width: 0 }}
-                            onClick={() => setShowLeaveModal(true)}
-                            className="pointer-events-auto font-bold text-white/50 hover:text-rose-500 transition-colors bg-black/40 p-1.5 md:p-2 border-2 border-white/20 hover:border-white/50 flex items-center justify-center h-8 w-8 lg:h-10 lg:w-10 overflow-hidden shrink-0"
-                          >
-                            <img src="/close.png" alt="Leave" className="w-full h-full opacity-80 hover:opacity-100 object-contain invert" />
-                          </motion.button>
-                        )}
-                      </AnimatePresence>
-                    </div>
-
-                   <motion.div 
-                     initial={false}
-                     animate={{ opacity: isScrolled ? 0 : 1, height: isScrolled ? 0 : 'auto', marginTop: isScrolled ? 0 : undefined, scale: isScrolled ? 0.8 : 1 }}
-                     className="pointer-events-auto px-2 lg:px-4 py-1 bg-[#4D4C7D] border-2 border-white text-white shadow-[2px_2px_0px_black] text-[10px] lg:text-sm uppercase font-bold tracking-widest font-['IndieSellout'] mt-1 lg:mt-2 whitespace-nowrap origin-top-right overflow-hidden"
-                   >
-                      {phase === 'input' ? 'TIME TO LOCK IN' : 'REVEALING...'}
-                   </motion.div>
-                   
-                   {/* Show full Leave Game button below when NOT scrolled */}
-                   <AnimatePresence>
-                     {!isScrolled && (
-                       <motion.button
-                         initial={{ opacity: 0, height: 0 }}
-                         animate={{ opacity: 1, height: 'auto' }}
-                         exit={{ opacity: 0, height: 0 }}
-                         onClick={() => setShowLeaveModal(true)}
-                         className="pointer-events-auto mt-1 lg:mt-2 text-xs lg:text-sm font-bold text-white/50 hover:text-rose-500 transition-colors uppercase font-['IndieSellout'] tracking-widest whitespace-nowrap bg-black/40 px-2 py-1 overflow-hidden shrink-0"
-                       >
-                         Leave Game
-                       </motion.button>
-                     )}
-                   </AnimatePresence>
-                 </div>
-               )}
              </div>
-          )}
+           </div>
 
-          {/* Phase Render */}
-          <div className="flex-1 flex flex-col items-center justify-center relative w-full px-4 mt-24 pb-20 lg:pl-[350px]">
+           {/* Timer UI (Right) */}
+           {phaseTimer && (
+             <div className="pointer-events-none flex flex-col items-end gap-1 lg:gap-2">
+                <div className="flex items-center gap-2">
+                  <div className={`flex items-center font-bold font-['IndieSellout'] text-3xl lg:text-5xl h-10 lg:h-14 overflow-hidden relative min-w-[60px] lg:min-w-[80px] justify-center tabular-nums pointer-events-auto ${phaseTimer.timeLeft <= 10 ? 'text-red-600 animate-pulse' : 'text-rose-400'}`}>
+                    {phaseTimer.timeLeft.toString().split('').map((digit, i) => (
+                      <div key={`${phaseTimer.timeLeft.toString().length}-${i}`} className="relative inline-flex justify-center">
+                        <AnimatePresence mode="popLayout">
+                          <motion.span
+                            key={digit}
+                            initial={{ y: "100%", opacity: 0 }}
+                            animate={{ y: "0%", opacity: 1 }}
+                            exit={{ y: "-100%", opacity: 0 }}
+                            transition={{ duration: 0.4, ease: "backOut" }}
+                            className="inline-block"
+                          >
+                            {digit}
+                          </motion.span>
+                        </AnimatePresence>
+                      </div>
+                    ))}
+                    <span className="inline-block ml-1">s</span>
+                  </div>
+                  
+                  {/* Show close button here when scrolled */}
+                  <AnimatePresence>
+                    {isScrolled && (
+                      <motion.button
+                        initial={{ opacity: 0, scale: 0.5, width: 0 }}
+                        animate={{ opacity: 1, scale: 1, width: "auto" }}
+                        exit={{ opacity: 0, scale: 0.5, width: 0 }}
+                        onClick={() => setShowLeaveModal(true)}
+                        className="pointer-events-auto font-bold text-white/50 hover:text-rose-500 transition-colors bg-black/40 p-1.5 md:p-2 border-2 border-white/20 hover:border-white/50 flex items-center justify-center h-8 w-8 lg:h-10 lg:w-10 overflow-hidden shrink-0"
+                      >
+                        <img src="/close.png" alt="Leave" className="w-full h-full opacity-80 hover:opacity-100 object-contain invert" />
+                      </motion.button>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+               <motion.div 
+                 initial={false}
+                 animate={{ opacity: isScrolled ? 0 : 1, height: isScrolled ? 0 : 'auto', marginTop: isScrolled ? 0 : undefined, scale: isScrolled ? 0.8 : 1 }}
+                 className="pointer-events-auto px-2 lg:px-4 py-1 bg-[#4D4C7D] border-2 border-white text-white shadow-[2px_2px_0px_black] text-[10px] lg:text-sm uppercase font-bold tracking-widest font-['IndieSellout'] mt-1 lg:mt-2 whitespace-nowrap origin-top-right overflow-hidden"
+               >
+                  {phase === 'input' ? 'TIME TO LOCK IN' : 'REVEALING...'}
+               </motion.div>
+               
+               {/* Show full Leave Game button below when NOT scrolled */}
+               <AnimatePresence>
+                 {!isScrolled && (
+                   <motion.button
+                     initial={{ opacity: 0, height: 0 }}
+                     animate={{ opacity: 1, height: 'auto' }}
+                     exit={{ opacity: 0, height: 0 }}
+                     onClick={() => setShowLeaveModal(true)}
+                     className="pointer-events-auto mt-1 lg:mt-2 text-xs lg:text-sm font-bold text-white/50 hover:text-rose-500 transition-colors uppercase font-['IndieSellout'] tracking-widest whitespace-nowrap bg-black/40 px-2 py-1 overflow-hidden shrink-0"
+                   >
+                     Leave Game
+                   </motion.button>
+                 )}
+               </AnimatePresence>
+             </div>
+           )}
+         </div>
+      )}
+
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col relative w-full h-screen overflow-hidden z-0">
+          
+          {/* Scrollable Container (Starts Below Header) */}
+          <div className="flex-1 flex flex-col items-center justify-start overflow-y-auto w-full px-4 pt-[100px] lg:pt-[100px] pb-20 lg:pl-[350px]" onScroll={handleScroll}>
              <AnimatePresence mode="wait">
                {renderGamePhase()}
              </AnimatePresence>

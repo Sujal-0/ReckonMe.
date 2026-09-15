@@ -12,6 +12,7 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { setUserInfo } = useAppStore();
 
@@ -33,19 +34,26 @@ export default function SignUp() {
   };
 
   const handleSignup = async () => {
-    // Handle signup logic here
     if (validateSignup()) {
-      const response = await apiClient.post(
-        SIGNUP_ROUTE,
-        { username, email, password },
-        { withCredentials: true }
-      );
-      if (response.status === 201) {
-        setUserInfo(response.data.user);
-        toast.success("Signup successful");
-        navigate("/");
+      setIsLoading(true);
+      try {
+        const response = await apiClient.post(
+          SIGNUP_ROUTE,
+          { username, email, password },
+          { withCredentials: true }
+        );
+        if (response.status === 201) {
+          setUserInfo(response.data.user);
+          toast.success("Signup successful");
+          navigate("/");
+        }
+      } catch (error) {
+        console.error("Signup error:", error);
+        const errorMsg = error.response?.data || "An error occurred during signup. Please try again.";
+        toast.error(errorMsg);
+      } finally {
+        setIsLoading(false);
       }
-      console.log({ response });
     }
   };
 
@@ -98,10 +106,11 @@ export default function SignUp() {
             className="flex-1 px-4 py-1 mt-4 rounded-none bg-transparent text-xl sm:text-2xl font-medium text-white placeholder-white/50 focus:outline-none border-0 border-b-2 transition-all shadow-[3px_3px_0px_white] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] font-['IndieSellout'] tracking-widest leading-tight"
           />
           <button
-            className="px-4 sm:px-10 py-2 font-medium mt-6 bg-[#0A0A0A] text-[#ffffff] text-xl sm:text-2xl w-full transition-all shadow-[3px_3px_0px_white] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px]"
+            className="px-4 sm:px-10 py-2 font-medium mt-6 bg-[#0A0A0A] text-[#ffffff] text-xl sm:text-2xl w-full transition-all shadow-[3px_3px_0px_white] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={handleSignup}
+            disabled={isLoading}
           >
-            Sign Up
+            {isLoading ? "Signing Up..." : "Sign Up"}
           </button>
         </div>
       </motion.div>

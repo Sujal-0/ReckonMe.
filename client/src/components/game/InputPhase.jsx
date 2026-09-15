@@ -7,11 +7,12 @@ import { Highlighter } from "@/components/magicui/highlighter";
 export const InputPhase = ({ round, room, player }) => {
   const [selectedAnswer, setSelectedAnswer] = useState(round?.answers?.[player.id] || null);
   const [selectedGuess, setSelectedGuess] = useState(round?.guesses?.[player.id]?.value || null);
-  const [isLocked, setIsLocked] = useState(!!round?.guesses?.[player.id]);
+  const isLockedInitial = !!round?.guesses?.[player.id] || !!round?.answers?.[player.id];
+  const [isLocked, setIsLocked] = useState(isLockedInitial);
   
-  const [showQuestionText, setShowQuestionText] = useState(false);
-  const [showOptions, setShowOptions] = useState(false);
-  const [showGuessingPhase, setShowGuessingPhase] = useState(false);
+  const [showQuestionText, setShowQuestionText] = useState(isLockedInitial);
+  const [showOptions, setShowOptions] = useState(isLockedInitial);
+  const [showGuessingPhase, setShowGuessingPhase] = useState(isLockedInitial);
   const guessPhaseRef = useRef(null);
 
   useEffect(() => {
@@ -24,15 +25,16 @@ export const InputPhase = ({ round, room, player }) => {
 
   // Calculate question animation duration (approx 2s) to show options after
   useEffect(() => {
+    if (isLockedInitial) return;
     const t1 = setTimeout(() => setShowQuestionText(true), 400);
     const t2 = setTimeout(() => setShowOptions(true), 2500); 
     return () => { clearTimeout(t1); clearTimeout(t2); };
-  }, [round.roundNumber]);
+  }, [round.roundNumber, isLockedInitial]);
 
   const targetPlayer = room.players.find(p => p.id !== player.id);
   const isHotSeat = round.category === "THE HOT SEAT";
   const isSpotlight = isHotSeat && round.spotlightPlayerId === player.id;
-  const hasSubmitted = isLocked || (round.guesses && round.guesses[player.id]);
+  const hasSubmitted = isLocked || !!round.guesses?.[player.id];
 
   useEffect(() => {
     if (selectedAnswer) {
