@@ -5,6 +5,7 @@ import useRoomStore from "@/store/roomStore";
 import socket from "@/lib/socket";
 import { ReckonLoader } from "@/components/ui/ReckonLoader";
 import { Confetti } from "@/components/ui/confetti";
+import { trackEvent } from "@/utils/analytics";
 
 const Results = () => {
   const { code } = useParams();
@@ -14,6 +15,20 @@ const Results = () => {
   const [isWaiting, setIsWaiting] = useState(false);
   const [isRestarting, setIsRestarting] = useState(false);
   const [opponentLeft, setOpponentLeft] = useState(false);
+  const [showLeaveModal, setShowLeaveModal] = useState(false);
+
+  // Mobile Back Button Guard
+  useEffect(() => {
+    window.history.pushState(null, null, window.location.href);
+    const handlePopState = (event) => {
+      window.history.pushState(null, null, window.location.href);
+      setShowLeaveModal(true);
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
 
   useEffect(() => {
     if (!room || !player) {
@@ -60,6 +75,13 @@ const Results = () => {
       frame();
     }
   }, [step, isTie]);
+
+  useEffect(() => {
+    if (!room?.analytics_finished) {
+       trackEvent("game_finished", { roomId: code });
+       room.analytics_finished = true;
+    }
+  }, [room, code]);
 
   const tieTexts = [
     "IT'S A DEADLOCK. YOU TWO ARE PRACTICALLY THE SAME PERSON...",
@@ -419,6 +441,49 @@ const Results = () => {
             )}
          </AnimatePresence>
        </div>
+      {/* Leave Room Modal */}
+      <AnimatePresence>
+        {showLeaveModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowLeaveModal(false)}
+            className="fixed inset-0 z-[100] grid p-8 cursor-pointer bg-slate-900/40 backdrop-blur place-items-center"
+          >
+            <motion.div
+              initial={{ scale: 0, rotate: "12.5deg" }}
+              animate={{ scale: 1, rotate: "0deg" }}
+              exit={{ scale: 0, rotate: "0deg" }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-sm p-8 overflow-hidden text-white shadow-xl cursor-default bg-[#0A0A0A] cartoon-dashed-border-red rounded-2xl"
+            >
+              <div className="relative z-10 space-y-6 text-center font-['IndieSellout']">
+                <h3 className="text-4xl font-bold text-rose-500">Leaving?</h3>
+                <p className="text-xl text-white/70">Are you sure you want to leave the results screen and return home?</p>
+                <div className="flex justify-center gap-4 pt-4">
+                  <button
+                    onClick={() => setShowLeaveModal(false)}
+                    className="px-6 py-2 bg-transparent border-2 border-white text-white rounded-lg font-bold shadow-[3px_3px_0px_white] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px]"
+                  >
+                    Stay
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowLeaveModal(false);
+                      handleLeaveHome();
+                    }}
+                    className="px-6 py-2 bg-rose-600 text-white rounded-lg font-bold shadow-[3px_3px_0px_white] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px]"
+                  >
+                    Leave
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 };

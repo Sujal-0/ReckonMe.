@@ -24,7 +24,13 @@ This document outlines the next logical steps for **ReckonMe!** to transition fr
 - [x] Configure the Load Balancer with Sticky Sessions (Handled by Socket.io Redis Adapter).
 - [x] Implement strict CORS policies and Rate Limiting to secure the live endpoints.
 
-## Phase 5: Post-Launch Polish
+## Phase 5: Post-Launch Polish & Content Gathering
+- [x] Integrate analytics (PostHog) to track player drop-off rates and popular questions.
+- [x] Polish mobile UI and handle browser/mobile Back button navigation trapping.
 - [ ] Add sound effects (SFX) and background music (BGM) utilizing the Howler.js library.
-- [ ] Integrate analytics (e.g., PostHog or Google Analytics) to track player drop-off rates and popular questions.
 - [ ] Add localization (i18n) support if expanding to non-English audiences.
+
+## Phase 6: Core Content Launch
+- [ ] Gather 1000+ real, high-quality questions and options.
+- [ ] Upload content via the Admin Dashboard's bulk upload tool.
+- [ ] Resume Phase 3 (Load Testing) after content is loaded.

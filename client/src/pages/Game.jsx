@@ -9,6 +9,7 @@ import { RevealingPhase } from "@/components/game/RevealingPhase";
 import { SmartChat } from "@/components/lobby/SmartChat";
 import { ReckonLoader } from "@/components/ui/ReckonLoader";
 import socket from "@/lib/socket";
+import { trackEvent } from "@/utils/analytics";
 
 const Game = () => {
   const { code } = useParams();
@@ -52,6 +53,34 @@ const Game = () => {
     };
   }, []);
 
+  // Socket event listeners
+  useEffect(() => {
+    if (!socket || !room) return;
+
+    const handleInputSubmitted = ({ playerId }) => {
+      // You can add visual feedback here if you like
+    };
+
+    socket.on('input-submitted', handleInputSubmitted);
+
+    return () => {
+      socket.off('input-submitted', handleInputSubmitted);
+    };
+  }, [socket, room]);
+
+  // Mobile Back Button Guard
+  useEffect(() => {
+    window.history.pushState(null, null, window.location.href);
+    const handlePopState = (event) => {
+      window.history.pushState(null, null, window.location.href);
+      setShowLeaveModal(true);
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
+
   useEffect(() => {
     if (!room || !player) {
       navigate("/");
@@ -60,6 +89,9 @@ const Game = () => {
     
     if (room.status === "lobby") {
       navigate(`/lobby/${code}`);
+    } else if (room.status === "playing" && !room.analytics_tracked) {
+       trackEvent("game_started", { roomId: code });
+       room.analytics_tracked = true; // prevent multiple tracking
     }
   }, [room, player, code, navigate]);
 

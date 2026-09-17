@@ -9,6 +9,7 @@ import useUserStore from "@/store/userStore";
 import socket from "@/lib/socket";
 import { ROOM_JOIN_ROUTE } from "@/utils/constants";
 import { ReckonLoader } from "@/components/ui/ReckonLoader";
+import { trackEvent } from "@/utils/analytics";
 
 const SpringModal = ({ isOpen, setIsOpen }) => {
   const navigate = useNavigate();
@@ -72,6 +73,7 @@ const SpringModal = ({ isOpen, setIsOpen }) => {
           setCreating(false);
         } else if (response?.success && response.room) {
           setRoom(response.room);
+          trackEvent("room_created", { roomId });
           navigate(`/lobby/${response.room.roomId}`);
         }
       }, 1800);
@@ -126,6 +128,7 @@ const SpringModal = ({ isOpen, setIsOpen }) => {
             setJoining(false);
           } else if (response?.success && response.room) {
             setRoom(response.room);
+            trackEvent("player_joined", { roomId: code });
             navigate(`/lobby/${response.room.roomId}`);
           }
         }, 1800);

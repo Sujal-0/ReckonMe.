@@ -232,6 +232,19 @@ const Lobby = () => {
   const allPlayersReady = players.length === 2 && players.every((p) => p.ready);
   const canStartGame = player?.isHost && allPlayersHaveNames && allPlayersReady;
 
+  // Mobile Back Button Guard
+  useEffect(() => {
+    window.history.pushState(null, null, window.location.href);
+    const handlePopState = (event) => {
+      window.history.pushState(null, null, window.location.href);
+      setShowLeaveModal(true);
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
+
   useEffect(() => {
     const handleRoomUpdated = (updatedRoom) => {
       if (!updatedRoom || !player) return;

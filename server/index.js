@@ -43,12 +43,21 @@ const apiLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
+// Apply strict rate limiting to auth and admin routes to prevent brute-force attacks
+const strictLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 30, // Limit each IP to 30 requests per windowMs
+  message: { error: "Too many login attempts or sensitive requests, please try again later." },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 app.use('/api/', apiLimiter);
 
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', strictLimiter, authRoutes);
+app.use("/api/admin", strictLimiter, adminRoutes);
 app.use("/api", contactRoutes); 
 app.use("/api/rooms", roomRoutes);
-app.use("/api/admin", adminRoutes);
 app.use("/api/history", historyRoutes);
 app.use("/api/question-books", questionBookRoutes);
 app.use("/api/uploads", uploadRoutes);
