@@ -10,7 +10,7 @@ const questionSchema = new mongoose.Schema(
     options: {
       type: [String],
       required: true,
-      validate: [v => v.length >= 2 && v.length <= 4, "Must have between 2 and 4 options"],
+      validate: [v => v.length >= 2 && v.length <= 6, "Must have between 2 and 6 options"],
     },
     category: {
       type: String,

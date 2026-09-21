@@ -1,0 +1,222 @@
+[
+  {
+    "text": "Would you rather find out your partner has been cheating on you for a year, or find out they don't actually find you physically attractive?",
+    "options": [
+      "Cheating for a year",
+      "Zero physical attraction"
+    ],
+    "category": "Would You Rather",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Scrape"
+  },
+  {
+    "text": "Would you rather have a partner who is incredibly deeply in love with you but boring, or someone who is thrilling and fun but you know they might leave at any moment?",
+    "options": [
+      "Boring but loyal",
+      "Thrilling but temporary"
+    ],
+    "category": "Would You Rather",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Scrape"
+  },
+  {
+    "text": "Would you rather your friend group secretly think you are annoying, or secretly think you are dumb?",
+    "options": [
+      "Annoying",
+      "Dumb"
+    ],
+    "category": "Would You Rather",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Scrape"
+  },
+  {
+    "text": "Who is most likely to ruin a perfectly good moment by making it awkward?",
+    "options": [
+      "{PLAYER_1}",
+      "{PLAYER_2}"
+    ],
+    "category": "Most Likely To",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Scrape"
+  },
+  {
+    "text": "Who is most likely to give terrible relationship advice but act like a professional therapist?",
+    "options": [
+      "{PLAYER_1}",
+      "{PLAYER_2}"
+    ],
+    "category": "Most Likely To",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Scrape"
+  },
+  {
+    "text": "Who is most likely to stay in a toxic relationship just because the sex is good?",
+    "options": [
+      "{PLAYER_1}",
+      "{PLAYER_2}"
+    ],
+    "category": "Most Likely To",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Scrape"
+  },
+  {
+    "text": "Never have I ever stalked an ex's new partner on social media from a fake account.",
+    "options": [
+      "I Have",
+      "Never"
+    ],
+    "category": "Never Have I Ever",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Scrape"
+  },
+  {
+    "text": "Never have I ever pretended to be texting someone when I was actually just avoiding a social interaction.",
+    "options": [
+      "I Have",
+      "Never"
+    ],
+    "category": "Never Have I Ever",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Scrape"
+  },
+  {
+    "text": "Never have I ever read a friend's private texts over their shoulder and kept it a secret.",
+    "options": [
+      "I Have",
+      "Never"
+    ],
+    "category": "Never Have I Ever",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Scrape"
+  },
+  {
+    "text": "Dating someone with zero ambition, or dating someone who works 80 hours a week and ignores you?",
+    "options": [
+      "Zero ambition",
+      "Workaholic"
+    ],
+    "category": "This or That",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Scrape"
+  },
+  {
+    "text": "Getting back with your toxic ex, or staying single for the next 5 years?",
+    "options": [
+      "Toxic ex",
+      "Single 5 years"
+    ],
+    "category": "This or That",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Scrape"
+  },
+  {
+    "text": "Monogamy is inherently unnatural and humans force themselves into it because of societal pressure.",
+    "options": [
+      "Agree",
+      "Disagree"
+    ],
+    "category": "Hot Takes",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Scrape"
+  },
+  {
+    "text": "If you don't post your partner on social media, you are hiding them from someone or keeping your options open.",
+    "options": [
+      "Agree",
+      "Disagree"
+    ],
+    "category": "Hot Takes",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Scrape"
+  },
+  {
+    "text": "Men and women cannot be strictly platonic best friends without one of them catching feelings eventually.",
+    "options": [
+      "Agree",
+      "Disagree"
+    ],
+    "category": "Hot Takes",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Scrape"
+  },
+  {
+    "text": "Would you rather have a partner who is completely obsessed with you but slightly controlling, or completely hands-off but slightly emotionally distant?",
+    "options": [
+      "Obsessed & controlling",
+      "Hands-off & distant"
+    ],
+    "category": "Would You Rather",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Scrape"
+  },
+  {
+    "text": "Who is most likely to ghost someone after three great dates for absolutely no logical reason?",
+    "options": [
+      "{PLAYER_1}",
+      "{PLAYER_2}"
+    ],
+    "category": "Most Likely To",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Scrape"
+  },
+  {
+    "text": "Who is most likely to get wildly successful but cut off their old friends?",
+    "options": [
+      "{PLAYER_1}",
+      "{PLAYER_2}"
+    ],
+    "category": "Most Likely To",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Scrape"
+  },
+  {
+    "text": "Never have I ever lied about my body count.",
+    "options": [
+      "I Have",
+      "Never"
+    ],
+    "category": "Never Have I Ever",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Scrape"
+  },
+  {
+    "text": "Being in a sexless relationship with your soulmate, or being in a passionate relationship with someone you can't have a deep conversation with?",
+    "options": [
+      "Sexless soulmate",
+      "Passionate stranger"
+    ],
+    "category": "This or That",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Scrape"
+  },
+  {
+    "text": "The 'talking stage' is just an excuse for commitment issues and shouldn't last longer than two weeks.",
+    "options": [
+      "Agree",
+      "Disagree"
+    ],
+    "category": "Hot Takes",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Scrape"
+  }
+]

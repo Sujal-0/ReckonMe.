@@ -28,7 +28,7 @@ app.use(cors({
 }));
 
 app.use(cookieParser());
-app.use(express.json());
+app.use(express.json({ limit: "50mb" }));
 
 // 🛡️ Security Hardening
 // Use Helmet to secure HTTP headers

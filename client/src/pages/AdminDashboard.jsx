@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { ShieldAlert, Trash2, Edit3, ArrowLeft, Save, Trash, ArrowDownAZ, ArrowDown10, Database } from "lucide-react";
+import { ShieldAlert, Trash2, Edit3, ArrowLeft, Save, Trash, ArrowDownAZ, ArrowDown10, Database, Globe } from "lucide-react";
 import { toast } from "sonner";
 import { apiClient } from "@/lib/api-client";
 import { ReckonLoader } from "@/components/ui/ReckonLoader";
@@ -82,6 +82,51 @@ export const AdminDashboard = () => {
     }));
     setQuestions(prev => [...prev, ...formatted]);
     toast.success(`Loaded ${formatted.length} questions into staging.`);
+  };
+
+  const handleDiscardStagingQuestion = async (index, question) => {
+    try {
+      const adminSecret = prompt("Admin Secret required for discard:");
+      if (!adminSecret) return;
+
+      const res = await fetch("http://localhost:8747/api/admin/discard-questions", {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+          "x-admin-secret": adminSecret
+        },
+        body: JSON.stringify({ questions: [question] }),
+      });
+
+      if (!res.ok) throw new Error("Failed to permanently discard question");
+      
+      setQuestions(questions.filter((_, i) => i !== index));
+      setToast({ show: true, message: "Question permanently discarded!", type: "success" });
+    } catch (err) {
+      setToast({ show: true, message: err.message, type: "error" });
+    }
+  };
+
+  const handleAutoScrape = async () => {
+    try {
+      const adminSecret = prompt("Admin Secret required for auto-scrape:");
+      if (!adminSecret) return;
+      setIsLoading(true);
+
+      const res = await fetch("http://localhost:8747/api/admin/auto-scrape", {
+        method: "POST",
+        headers: { "x-admin-secret": adminSecret }
+      });
+      
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to auto-scrape");
+      
+      toast.success(`Scraped ${data.count} new questions from Reddit! Pull the AI batch to review.`);
+    } catch (err) {
+      toast.error(err.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleUploadToDB = async () => {
@@ -298,7 +343,7 @@ export const AdminDashboard = () => {
                      </button>
                   )}
                   <button 
-                    onClick={() => isLive ? handleDeleteLiveQuestion(q._id) : setQuestions(questions.filter((_, i) => i !== qIndex))}
+                    onClick={() => isLive ? handleDeleteLiveQuestion(q._id) : handleDiscardStagingQuestion(qIndex, q)}
                     className="p-3 bg-rose-500/20 border-2 border-rose-500/50 hover:bg-rose-500/40 transition-all shadow-[2px_2px_0px_rgba(244,63,94,0.5)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]"
                     title="Delete Question"
                   >

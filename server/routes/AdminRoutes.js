@@ -1,5 +1,5 @@
 import express from 'express';
-import { uploadQuestions, getStats, getQuestions, updateQuestion, deleteQuestion, getAIQuestions } from '../controllers/AdminController.js';
+import { uploadQuestions, getStats, getQuestions, updateQuestion, deleteQuestion, getAIQuestions, discardQuestions, autoScrape } from '../controllers/AdminController.js';
 
 const router = express.Router();
 
@@ -13,6 +13,8 @@ const adminAuth = (req, res, next) => {
 };
 
 router.post('/upload-questions', adminAuth, uploadQuestions);
+router.post('/discard-questions', adminAuth, discardQuestions);
+router.post('/auto-scrape', adminAuth, autoScrape);
 router.get('/stats', adminAuth, getStats);
 router.get('/ai-questions', adminAuth, getAIQuestions);
 router.get('/questions', adminAuth, getQuestions);

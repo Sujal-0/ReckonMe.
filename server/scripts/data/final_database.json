@@ -1,0 +1,585 @@
+[
+  {
+    "text": "Have you ever been to jail?",
+    "options": [
+      "Spill the tea!",
+      "Take a penalty shot",
+      "Skip this one"
+    ],
+    "category": "Truth or Dare",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "How often do you shower?",
+    "options": [
+      "Spill the tea!",
+      "Take a penalty shot",
+      "Skip this one"
+    ],
+    "category": "Truth or Dare",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Can you lick your elbow?",
+    "options": [
+      "Spill the tea!",
+      "Take a penalty shot",
+      "Skip this one"
+    ],
+    "category": "Truth or Dare",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Which of your family members annoys you the most and why?",
+    "options": [
+      "Spill the tea!",
+      "Take a penalty shot",
+      "Skip this one"
+    ],
+    "category": "Truth or Dare",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "What's your best memory with a crush/partner?",
+    "options": [
+      "Spill the tea!",
+      "Take a penalty shot",
+      "Skip this one"
+    ],
+    "category": "Truth or Dare",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Have you ever played sick because you didn't want to go to school?",
+    "options": [
+      "Spill the tea!",
+      "Take a penalty shot",
+      "Skip this one"
+    ],
+    "category": "Truth or Dare",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Have you ever asked someone out and got rejected? What happened?",
+    "options": [
+      "Spill the tea!",
+      "Take a penalty shot",
+      "Skip this one"
+    ],
+    "category": "Truth or Dare",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Have you ever had a dream about one of your relatives?",
+    "options": [
+      "Spill the tea!",
+      "Take a penalty shot",
+      "Skip this one"
+    ],
+    "category": "Truth or Dare",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "How often do you lie to other people?",
+    "options": [
+      "Spill the tea!",
+      "Take a penalty shot",
+      "Skip this one"
+    ],
+    "category": "Truth or Dare",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Name a time when you used somebody for your personal gain.",
+    "options": [
+      "Spill the tea!",
+      "Take a penalty shot",
+      "Skip this one"
+    ],
+    "category": "Truth or Dare",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Show everyone the last picture in your camera roll.",
+    "options": [
+      "Spill the tea!",
+      "Take a penalty shot",
+      "Skip this one"
+    ],
+    "category": "Truth or Dare",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Let someone go through your Amazon purchase history and read it out to the group.",
+    "options": [
+      "Spill the tea!",
+      "Take a penalty shot",
+      "Skip this one"
+    ],
+    "category": "Truth or Dare",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Screen share your search history from today.",
+    "options": [
+      "Spill the tea!",
+      "Take a penalty shot",
+      "Skip this one"
+    ],
+    "category": "Truth or Dare",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Let someone go through your YouTube history and read it out to the group.",
+    "options": [
+      "Spill the tea!",
+      "Take a penalty shot",
+      "Skip this one"
+    ],
+    "category": "Truth or Dare",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Send a picture of your favourite stuffed animal.",
+    "options": [
+      "Spill the tea!",
+      "Take a penalty shot",
+      "Skip this one"
+    ],
+    "category": "Truth or Dare",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Name as many countries as you can",
+    "options": [
+      "Spill the tea!",
+      "Take a penalty shot",
+      "Skip this one"
+    ],
+    "category": "Truth or Dare",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Name one thing you would change about each person here.",
+    "options": [
+      "Spill the tea!",
+      "Take a penalty shot",
+      "Skip this one"
+    ],
+    "category": "Truth or Dare",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Show everyone here the last 5 messages with the last person you messaged/messaged you.",
+    "options": [
+      "Spill the tea!",
+      "Take a penalty shot",
+      "Skip this one"
+    ],
+    "category": "Truth or Dare",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Send your favorite meme",
+    "options": [
+      "Spill the tea!",
+      "Take a penalty shot",
+      "Skip this one"
+    ],
+    "category": "Truth or Dare",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Prank call your enemy",
+    "options": [
+      "Spill the tea!",
+      "Take a penalty shot",
+      "Skip this one"
+    ],
+    "category": "Truth or Dare",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Put ice in your clothes and wait until it melts.",
+    "options": [
+      "Spill the tea!",
+      "Take a penalty shot",
+      "Skip this one"
+    ],
+    "category": "Truth or Dare",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Post the oldest photo on your phone",
+    "options": [
+      "Spill the tea!",
+      "Take a penalty shot",
+      "Skip this one"
+    ],
+    "category": "Truth or Dare",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Would you rather know how to speak only English or know how to speak every language but never English?",
+    "options": [
+      "Know how to speak only english",
+      "Know how to speak every language but never english"
+    ],
+    "category": "Would You Rather",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Would you rather be a rock star or be a movie star?",
+    "options": [
+      "Be a rock star",
+      "Be a movie star"
+    ],
+    "category": "Would You Rather",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Would you rather win an Oscar or win the Nobel Prize?",
+    "options": [
+      "Win an oscar",
+      "Win the nobel prize"
+    ],
+    "category": "Would You Rather",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Would you rather be a wizard or be a vampire?",
+    "options": [
+      "Be a wizard",
+      "Be a vampire"
+    ],
+    "category": "Would You Rather",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Would you rather be a high school/below teacher or be a college professor?",
+    "options": [
+      "Be a high school/below teacher",
+      "Be a college professor"
+    ],
+    "category": "Would You Rather",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Would you rather be a mall cop or be a prison guard?",
+    "options": [
+      "Be a mall cop",
+      "Be a prison guard"
+    ],
+    "category": "Would You Rather",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Would you rather have hair to the ground and never cut it again or shave yourself bald every morning?",
+    "options": [
+      "Have hair to the ground and never cut it again",
+      "Shave yourself bald every morning"
+    ],
+    "category": "Would You Rather",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Would you rather never be able to feel emotions or never be able to express emotions?",
+    "options": [
+      "Never be able to feel emotions",
+      "Never be able to express emotions"
+    ],
+    "category": "Would You Rather",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Never have I ever had a big stain on my clothes I didn't notice.",
+    "options": [
+      "I have!",
+      "Never done that"
+    ],
+    "category": "Exposed",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Never have I ever driven someone's car without permission.",
+    "options": [
+      "I have!",
+      "Never done that"
+    ],
+    "category": "Exposed",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Never have I ever called the cops.",
+    "options": [
+      "I have!",
+      "Never done that"
+    ],
+    "category": "Exposed",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Never have I ever kissed someone in school",
+    "options": [
+      "I have!",
+      "Never done that"
+    ],
+    "category": "Exposed",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Never have I ever gone camping with my family.",
+    "options": [
+      "I have!",
+      "Never done that"
+    ],
+    "category": "Exposed",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Never have I ever had really long hair",
+    "options": [
+      "I have!",
+      "Never done that"
+    ],
+    "category": "Exposed",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Never have I ever peed in a pool",
+    "options": [
+      "I have!",
+      "Never done that"
+    ],
+    "category": "Exposed",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Never have I ever broken into a house or building where I wasn't supposed to be.",
+    "options": [
+      "I have!",
+      "Never done that"
+    ],
+    "category": "Exposed",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Never have I ever been stuck in an elevator",
+    "options": [
+      "I have!",
+      "Never done that"
+    ],
+    "category": "Exposed",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Never have I ever done something I thought I would never do",
+    "options": [
+      "I have!",
+      "Never done that"
+    ],
+    "category": "Exposed",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Never have I ever created a Facebook account.",
+    "options": [
+      "I have!",
+      "Never done that"
+    ],
+    "category": "Exposed",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Who's most likely to turn into an e-girl/e-boy/e-nby?",
+    "options": [
+      "{PLAYER_1}",
+      "{PLAYER_2}"
+    ],
+    "category": "Most Likely To",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Who do you think has the fewest friends?",
+    "options": [
+      "{PLAYER_1}",
+      "{PLAYER_2}"
+    ],
+    "category": "Most Likely To",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Who's the least innocent one here?",
+    "options": [
+      "{PLAYER_1}",
+      "{PLAYER_2}"
+    ],
+    "category": "Most Likely To",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Who's the most romantic person here?",
+    "options": [
+      "{PLAYER_1}",
+      "{PLAYER_2}"
+    ],
+    "category": "Most Likely To",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Who's most likely to meet up with an online friend?",
+    "options": [
+      "{PLAYER_1}",
+      "{PLAYER_2}"
+    ],
+    "category": "Most Likely To",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Who's most likely to date their ex's sibling?",
+    "options": [
+      "{PLAYER_1}",
+      "{PLAYER_2}"
+    ],
+    "category": "Most Likely To",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Who do you think has the messiest room?",
+    "options": [
+      "{PLAYER_1}",
+      "{PLAYER_2}"
+    ],
+    "category": "Most Likely To",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Who's got the best taste in fashion?",
+    "options": [
+      "{PLAYER_1}",
+      "{PLAYER_2}"
+    ],
+    "category": "Most Likely To",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Who's the worst at gifting (gives unoriginal or boring gifts)?",
+    "options": [
+      "{PLAYER_1}",
+      "{PLAYER_2}"
+    ],
+    "category": "Most Likely To",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  },
+  {
+    "text": "Who's most likely to spend all their money on something useless?",
+    "options": [
+      "{PLAYER_1}",
+      "{PLAYER_2}"
+    ],
+    "category": "Most Likely To",
+    "isActive": true,
+    "isAIProcessed": false,
+    "source": "OpenTriviaDB"
+  }
+]

@@ -1,0 +1,552 @@
+[
+  {
+    "text": "Would you rather find out your partner has a secret second family, or find out your partner is an undercover spy who has been monitoring you?",
+    "options": [
+      "Find out your partner has a secret second family",
+      "Find out your partner is an undercover spy who has been monitoring you"
+    ],
+    "category": "Would You Rather",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Would you rather be completely emotionally numb for the rest of your life, or feel every emotion at 100x intensity forever?",
+    "options": [
+      "Be completely emotionally numb for the rest of your life",
+      "Feel every emotion at 100x intensity forever"
+    ],
+    "category": "Would You Rather",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Would you rather marry someone who is insanely rich but belittles you daily, or marry someone deeply in love with you but you live in extreme poverty?",
+    "options": [
+      "Marry someone who is insanely rich but belittles you daily",
+      "Marry someone deeply in love with you but you live in extreme poverty"
+    ],
+    "category": "Would You Rather",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Would you rather have a partner who demands access to all your passwords, or have a partner who completely hides their phone and whereabouts from you?",
+    "options": [
+      "Have a partner who demands access to all your passwords",
+      "Have a partner who completely hides their phone and whereabouts from you"
+    ],
+    "category": "Would You Rather",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Would you rather accidentally say 'i love you' on the first date, or accidentally call them your ex's name during intimacy?",
+    "options": [
+      "Accidentally say 'I love you' on the first date",
+      "Accidentally call them your ex's name during intimacy"
+    ],
+    "category": "Would You Rather",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Would you rather know exactly what everyone truly thinks of you, or know exactly when and how everyone you love will die?",
+    "options": [
+      "Know exactly what everyone truly thinks of you",
+      "Know exactly when and how everyone you love will die"
+    ],
+    "category": "Would You Rather",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Would you rather be with someone who is obsessed with their ex but hides it, or be with someone who is completely over their ex but still best friends with them?",
+    "options": [
+      "Be with someone who is obsessed with their ex but hides it",
+      "Be with someone who is completely over their ex but still best friends with them"
+    ],
+    "category": "Would You Rather",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Would you rather have a brilliant child who is emotionally detached and distant, or have an average child who is incredibly loving and stays close to home?",
+    "options": [
+      "Have a brilliant child who is emotionally detached and distant",
+      "Have an average child who is incredibly loving and stays close to home"
+    ],
+    "category": "Would You Rather",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Would you rather always have to tell the brutal truth even when it destroys relationships, or always have to lie when someone asks for your honest opinion?",
+    "options": [
+      "Always have to tell the brutal truth even when it destroys relationships",
+      "Always have to lie when someone asks for your honest opinion"
+    ],
+    "category": "Would You Rather",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Would you rather forgive a partner who physically cheated once but deeply regrets it, or forgive a partner who emotionally cheated for months but never touched them?",
+    "options": [
+      "Forgive a partner who physically cheated once but deeply regrets it",
+      "Forgive a partner who emotionally cheated for months but never touched them"
+    ],
+    "category": "Would You Rather",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Who is most likely to ghost a 3-year relationship through a text message?",
+    "options": [
+      "{PLAYER_1}",
+      "{PLAYER_2}"
+    ],
+    "category": "Most Likely To",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Who is most likely to secretly still be checking their high school ex's instagram?",
+    "options": [
+      "{PLAYER_1}",
+      "{PLAYER_2}"
+    ],
+    "category": "Most Likely To",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Who is most likely to forgive cheating just because they don't want to be single?",
+    "options": [
+      "{PLAYER_1}",
+      "{PLAYER_2}"
+    ],
+    "category": "Most Likely To",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Who is most likely to start an argument just because they are bored?",
+    "options": [
+      "{PLAYER_1}",
+      "{PLAYER_2}"
+    ],
+    "category": "Most Likely To",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Who is most likely to give the absolute worst relationship advice but act like a guru?",
+    "options": [
+      "{PLAYER_1}",
+      "{PLAYER_2}"
+    ],
+    "category": "Most Likely To",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Who is most likely to cry in the bathroom at a club over someone they met two hours ago?",
+    "options": [
+      "{PLAYER_1}",
+      "{PLAYER_2}"
+    ],
+    "category": "Most Likely To",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Who is most likely to fake an emergency to get out of an awkward date?",
+    "options": [
+      "{PLAYER_1}",
+      "{PLAYER_2}"
+    ],
+    "category": "Most Likely To",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Who is most likely to gaslight their partner into thinking they remembered an anniversary?",
+    "options": [
+      "{PLAYER_1}",
+      "{PLAYER_2}"
+    ],
+    "category": "Most Likely To",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Who is most likely to marry for money and pretend it was for love?",
+    "options": [
+      "{PLAYER_1}",
+      "{PLAYER_2}"
+    ],
+    "category": "Most Likely To",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Who is most likely to accidentally reveal a massive secret because they were drunk?",
+    "options": [
+      "{PLAYER_1}",
+      "{PLAYER_2}"
+    ],
+    "category": "Most Likely To",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Never have I ever stalked a partner's ex so deep i accidentally liked a 3-year-old post.",
+    "options": [
+      "I Have",
+      "Never"
+    ],
+    "category": "Never Have I Ever",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Never have I ever pretended to be asleep so i didn't have to deal with an argument.",
+    "options": [
+      "I Have",
+      "Never"
+    ],
+    "category": "Never Have I Ever",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Never have I ever gone through a partner's phone while they were in the shower.",
+    "options": [
+      "I Have",
+      "Never"
+    ],
+    "category": "Never Have I Ever",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Never have I ever used a friend as an alibi to get away with something shady.",
+    "options": [
+      "I Have",
+      "Never"
+    ],
+    "category": "Never Have I Ever",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Never have I ever said 'i love you' just to end an exhausting conversation.",
+    "options": [
+      "I Have",
+      "Never"
+    ],
+    "category": "Never Have I Ever",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Never have I ever flirted with someone just to see if i still 'had it' while in a relationship.",
+    "options": [
+      "I Have",
+      "Never"
+    ],
+    "category": "Never Have I Ever",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Never have I ever secretly hated a gift from a partner but wore it every day anyway.",
+    "options": [
+      "I Have",
+      "Never"
+    ],
+    "category": "Never Have I Ever",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Never have I ever blocked someone and then unblocked them 2 hours later to see if they noticed.",
+    "options": [
+      "I Have",
+      "Never"
+    ],
+    "category": "Never Have I Ever",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Never have I ever stayed in a relationship for an extra month just because a holiday was coming up.",
+    "options": [
+      "I Have",
+      "Never"
+    ],
+    "category": "Never Have I Ever",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Never have I ever lied about my 'body count' because i was embarrassed.",
+    "options": [
+      "I Have",
+      "Never"
+    ],
+    "category": "Never Have I Ever",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "A partner with zero ambition OR A partner who works 90 hours a week?",
+    "options": [
+      "A partner with zero ambition",
+      "A partner who works 90 hours a week"
+    ],
+    "category": "This or That",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "A partner with bad hygiene OR A partner who is incredibly rude to waitstaff?",
+    "options": [
+      "A partner with bad hygiene",
+      "A partner who is incredibly rude to waitstaff"
+    ],
+    "category": "This or That",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Extremely clingy partner OR Extremely distant partner?",
+    "options": [
+      "Extremely clingy partner",
+      "Extremely distant partner"
+    ],
+    "category": "This or That",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Losing all your money OR Losing all your memories?",
+    "options": [
+      "Losing all your money",
+      "Losing all your memories"
+    ],
+    "category": "This or That",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Heartbreak OR Physical pain?",
+    "options": [
+      "Heartbreak",
+      "Physical pain"
+    ],
+    "category": "This or That",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Living a lie to keep the peace OR Telling the truth and destroying the family?",
+    "options": [
+      "Living a lie to keep the peace",
+      "Telling the truth and destroying the family"
+    ],
+    "category": "This or That",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Perfect physical chemistry but nothing to talk about OR Amazing deep conversations but zero physical chemistry?",
+    "options": [
+      "Perfect physical chemistry but nothing to talk about",
+      "Amazing deep conversations but zero physical chemistry"
+    ],
+    "category": "This or That",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Being the dumper OR Being the dumpee?",
+    "options": [
+      "Being the dumper",
+      "Being the dumpee"
+    ],
+    "category": "This or That",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Your partner’s friends hating you OR Your partner’s family hating you?",
+    "options": [
+      "Your partner’s friends hating you",
+      "Your partner’s family hating you"
+    ],
+    "category": "This or That",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Never having sex again OR Never feeling emotional love again?",
+    "options": [
+      "Never having sex again",
+      "Never feeling emotional love again"
+    ],
+    "category": "This or That",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "If you demand access to your partner's phone, the relationship is already over.",
+    "options": [
+      "Agree",
+      "Disagree"
+    ],
+    "category": "Hot Takes",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Men and women cannot be best friends without hidden feelings.",
+    "options": [
+      "Agree",
+      "Disagree"
+    ],
+    "category": "Hot Takes",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "The 'talking stage' is just an excuse for commitment issues.",
+    "options": [
+      "Agree",
+      "Disagree"
+    ],
+    "category": "Hot Takes",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "If you cheat once, you will 100% cheat again. 'Mistakes' don't exist in cheating.",
+    "options": [
+      "Agree",
+      "Disagree"
+    ],
+    "category": "Hot Takes",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "It is completely fine to stay friends with your exes.",
+    "options": [
+      "Agree",
+      "Disagree"
+    ],
+    "category": "Hot Takes",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Monogamy is unnatural and forced by societal norms.",
+    "options": [
+      "Agree",
+      "Disagree"
+    ],
+    "category": "Hot Takes",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "If you don't post your partner on social media, you are hiding them or keeping options open.",
+    "options": [
+      "Agree",
+      "Disagree"
+    ],
+    "category": "Hot Takes",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Soulmates do not exist. Love is just timing and proximity.",
+    "options": [
+      "Agree",
+      "Disagree"
+    ],
+    "category": "Hot Takes",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "Emotional cheating is significantly worse than physical cheating.",
+    "options": [
+      "Agree",
+      "Disagree"
+    ],
+    "category": "Hot Takes",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  },
+  {
+    "text": "If they wanted to, they would. Mixed signals always mean 'no'.",
+    "options": [
+      "Agree",
+      "Disagree"
+    ],
+    "category": "Hot Takes",
+    "isActive": true,
+    "isAIProcessed": true,
+    "source": "Curated Deep Gen"
+  }
+]

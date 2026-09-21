@@ -174,20 +174,121 @@ export const deleteQuestion = async (req, res) => {
   }
 };
 
+export const discardQuestions = async (req, res) => {
+  try {
+    const { questions } = req.body;
+    if (!questions || !Array.isArray(questions) || questions.length === 0) {
+      return res.status(400).json({ error: "No questions provided to discard." });
+    }
+
+    const discardedTexts = questions.map(q => q.text);
+
+    // Read the current file being used as the staging area
+    const filePath = path.join(__dirname, "..", "scripts", "data", "vogue_generated_data.json");
+    const curatedPath = path.join(__dirname, "..", "scripts", "data", "curated_questions.json");
+    
+    // Attempt to discard from both possible files to ensure they don't reappear
+    for (const file of [filePath, curatedPath]) {
+      try {
+        const data = await fs.readFile(file, "utf-8");
+        const existingQuestions = JSON.parse(data);
+        
+        const filteredQuestions = existingQuestions.filter(q => !discardedTexts.includes(q.text));
+        
+        await fs.writeFile(file, JSON.stringify(filteredQuestions, null, 2), "utf-8");
+      } catch (fsError) {
+        // Ignore if file doesn't exist
+      }
+    }
+
+    res.status(200).json({ success: true, message: `Discarded ${questions.length} questions permanently.` });
+  } catch (error) {
+    console.error("Error discarding questions:", error);
+    res.status(500).json({ error: "Failed to discard questions" });
+  }
+};
+
+import axios from 'axios';
+import * as cheerio from 'cheerio';
+
+export const autoScrape = async (req, res) => {
+  try {
+    const { data } = await axios.get('https://old.reddit.com/r/WouldYouRather/top/', {
+      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' }
+    });
+
+    const $ = cheerio.load(data);
+    const scraped = [];
+
+    $('p.title a.title').each((i, el) => {
+      let title = $(el).text().trim();
+      
+      // Clean up Reddit prefixes
+      title = title.replace(/^wyr/i, '').replace(/^would you rather/i, 'Would you rather').trim();
+      if (!title.toLowerCase().startsWith('would you rather')) return; // Skip non-WYR
+
+      // Attempt to split options purely algorithmically
+      const splitByOr = title.split(/\s+or\s+/i);
+      if (splitByOr.length >= 2) {
+        let opt1 = splitByOr[0].replace(/would you rather/i, '').trim();
+        let opt2 = splitByOr.slice(1).join(' or ').replace(/\?/g, '').trim();
+        
+        // Ensure options aren't too long
+        if (opt1.split(' ').length < 15 && opt2.split(' ').length < 15) {
+          scraped.push({
+            text: title.endsWith('?') ? title : title + '?',
+            options: [opt1, opt2],
+            category: "Would You Rather",
+            isActive: true,
+            isAIProcessed: true,
+            source: "Reddit Scraper"
+          });
+        }
+      }
+    });
+
+    if (scraped.length === 0) {
+      return res.status(400).json({ error: "Failed to parse questions from Reddit." });
+    }
+
+    const curatedPath = path.join(__dirname, "..", "scripts", "data", "curated_deep_data.json");
+    let existing = [];
+    try {
+      const fileData = await fs.readFile(curatedPath, "utf-8");
+      existing = JSON.parse(fileData);
+    } catch(e) { }
+
+    // Append without exact duplicates
+    const newAdditions = scraped.filter(sq => !existing.some(eq => eq.text === sq.text));
+    existing.push(...newAdditions);
+
+    await fs.writeFile(curatedPath, JSON.stringify(existing, null, 2), "utf-8");
+
+    res.status(200).json({ success: true, count: newAdditions.length, questions: newAdditions });
+  } catch (error) {
+    console.error("Auto scrape error:", error);
+    res.status(500).json({ error: "Failed to scrape social media." });
+  }
+};
+
 export const getAIQuestions = async (req, res) => {
   try {
-    const filePath = path.join(__dirname, "..", "scripts", "data", "ai_processed_data.json");
+    const filePath = path.join(__dirname, "..", "scripts", "data", "curated_deep_data.json");
     try {
       const data = await fs.readFile(filePath, "utf-8");
       const questions = JSON.parse(data);
-      // Format them exactly how the frontend staging area expects
-      const formatted = questions.map(q => ({
+      // Fetch all existing texts in one fast query to avoid 3000 sequential DB calls
+      const existingDBQuestions = await Question.find({}, { text: 1 }).lean();
+      const existingSet = new Set(existingDBQuestions.map(q => q.text));
+      
+      const newQuestions = questions.filter(q => !existingSet.has(q.text)).map(q => ({
         text: q.text,
         options: q.options,
-        category: q.category.toUpperCase(),
+        category: q.category?.toUpperCase() || "RANDOM",
         heatLevel: 1, // Default heat level
       }));
-      res.status(200).json({ success: true, questions: formatted });
+      
+      res.status(200).json({ success: true, questions: newQuestions });
     } catch (fsError) {
       // If file doesn't exist yet
       res.status(200).json({ success: true, questions: [] });
