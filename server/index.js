@@ -35,10 +35,10 @@ app.use(express.json({ limit: "50mb" }));
 app.use(helmet());
 
 // Apply rate limiting to all API routes
-// Limits each IP to 200 requests per 15 minutes
+// Limits each IP to 1000 requests per 15 minutes
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, 
-  max: 200, 
+  max: 1000, 
   message: { error: "Too many requests, please try again later." },
   standardHeaders: true,
   legacyHeaders: false,
@@ -46,7 +46,7 @@ const apiLimiter = rateLimit({
 // Apply strict rate limiting to auth and admin routes to prevent brute-force attacks
 const strictLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 30, // Limit each IP to 30 requests per windowMs
+  max: 300, // Limit each IP to 300 requests per windowMs to allow normal dashboard usage
   message: { error: "Too many login attempts or sensitive requests, please try again later." },
   standardHeaders: true,
   legacyHeaders: false,

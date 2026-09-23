@@ -162,15 +162,45 @@ export const deleteQuestion = async (req, res) => {
     const q = await Question.findByIdAndDelete(id);
     if (!q) return res.status(404).json({ error: "Question not found" });
 
-    const redis = sessionStore.redisClient;
+    const redis = sessionStore?.redisClient;
     if (redis) {
-      await redis.sRem(`questions:category:${q.category}`, id);
-      await redis.sRem(`questions:heat:${q.heatLevel}`, id);
+      try {
+        await redis.sRem(`questions:category:${q.category}`, id);
+        await redis.sRem(`questions:heat:${q.heatLevel}`, id);
+      } catch (err) {}
     }
     
     res.status(200).json({ success: true });
   } catch (error) {
     res.status(500).json({ error: "Failed to delete question" });
+  }
+};
+
+export const bulkDeleteQuestions = async (req, res) => {
+  try {
+    const { ids } = req.body;
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ error: "Invalid array of IDs" });
+    }
+    
+    const questionsToDelete = await Question.find({ _id: { $in: ids } });
+    
+    const result = await Question.deleteMany({ _id: { $in: ids } });
+    
+    const redis = sessionStore?.redisClient;
+    if (redis) {
+      for (const q of questionsToDelete) {
+        try {
+          await redis.sRem(`questions:category:${q.category}`, q._id.toString());
+          await redis.sRem(`questions:heat:${q.heatLevel}`, q._id.toString());
+        } catch (err) {}
+      }
+    }
+    
+    res.status(200).json({ success: true, count: result.deletedCount });
+  } catch (error) {
+    console.error("Error in bulkDeleteQuestions:", error);
+    res.status(500).json({ error: "Failed to bulk delete questions" });
   }
 };
 
@@ -295,5 +325,46 @@ export const getAIQuestions = async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch AI questions" });
+  }
+};
+
+export const removeDuplicateQuestions = async (req, res) => {
+  try {
+    const duplicates = await Question.aggregate([
+      { $match: { isCustom: false } },
+      { $group: {
+          _id: { $toLower: "$text" },
+          count: { $sum: 1 },
+          docs: { $push: "$_id" }
+        }
+      },
+      { $match: { count: { $gt: 1 } } }
+    ]);
+
+    let deletedCount = 0;
+    const redis = sessionStore?.redisClient;
+
+    for (const group of duplicates) {
+      // Keep the first document, delete the rest
+      const idsToDelete = group.docs.slice(1);
+      
+      const questionsToDelete = await Question.find({ _id: { $in: idsToDelete } });
+      const result = await Question.deleteMany({ _id: { $in: idsToDelete } });
+      deletedCount += result.deletedCount;
+
+      if (redis) {
+        for (const q of questionsToDelete) {
+          try {
+            await redis.sRem(`questions:category:${q.category}`, q._id.toString());
+            await redis.sRem(`questions:heat:${q.heatLevel}`, q._id.toString());
+          } catch (err) {}
+        }
+      }
+    }
+
+    res.status(200).json({ success: true, message: `Removed ${deletedCount} duplicate questions.` });
+  } catch (error) {
+    console.error("Error in removeDuplicateQuestions:", error);
+    res.status(500).json({ error: "Failed to remove duplicates" });
   }
 };

@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { verifyToken } from "../middlewares/AuthMiddleware.js";
 import { uploadMiddleware, parseQuestionsFile } from "../controllers/uploadController.js";
 
 const uploadRoutes = Router();
 
-uploadRoutes.post("/parse", verifyToken, uploadMiddleware, parseQuestionsFile);
+// This is a stateless utility route that parses files. It does not modify the DB.
+// We remove verifyToken so Admins can use it from the dashboard.
+uploadRoutes.post("/parse", uploadMiddleware, parseQuestionsFile);
 
 export default uploadRoutes;

@@ -22,6 +22,10 @@ export const AdminDashboard = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [isFetchingLive, setIsFetchingLive] = useState(false);
 
+  // Bulk and Filter state
+  const [selectedQuestions, setSelectedQuestions] = useState([]);
+  const [filterCategory, setFilterCategory] = useState("ALL");
+
   const [isUploading, setIsUploading] = useState(false);
   const [stats, setStats] = useState(null);
   const [sortMethod, setSortMethod] = useState("count"); // "count" | "alpha"
@@ -31,13 +35,18 @@ export const AdminDashboard = () => {
     localStorage.setItem("reckon_pending_questions", JSON.stringify(questions));
   }, [questions]);
 
+  // Reset selections when switching views or changing filter
+  useEffect(() => {
+    setSelectedQuestions([]);
+  }, [view, filterCategory]);
+
   useEffect(() => {
     if (isAuthenticated && view === "dashboard") {
       fetchStats();
     } else if (isAuthenticated && view === "live") {
       fetchLiveQuestions();
     }
-  }, [isAuthenticated, view, page]);
+  }, [isAuthenticated, view, page, filterCategory]);
 
   const fetchStats = async () => {
     try {
@@ -56,7 +65,8 @@ export const AdminDashboard = () => {
   const fetchLiveQuestions = async () => {
     setIsFetchingLive(true);
     try {
-      const res = await apiClient.get(`/api/admin/questions?page=${page}&limit=20`, {
+      const categoryQuery = filterCategory !== "ALL" ? `&category=${encodeURIComponent(filterCategory)}` : "";
+      const res = await apiClient.get(`/api/admin/questions?page=${page}&limit=20${categoryQuery}`, {
         headers: { "x-admin-secret": secret }
       });
       setLiveQuestions(res.data.questions);
@@ -77,56 +87,17 @@ export const AdminDashboard = () => {
   const handleBulkUploadSuccess = (uploadedQs) => {
     const formatted = uploadedQs.map(q => ({
       ...q,
-      category: "GENERAL",
-      heatLevel: 1
+      category: q.category || "GENERAL",
+      heatLevel: q.heatLevel || 1
     }));
     setQuestions(prev => [...prev, ...formatted]);
     toast.success(`Loaded ${formatted.length} questions into staging.`);
   };
 
   const handleDiscardStagingQuestion = async (index, question) => {
-    try {
-      const adminSecret = prompt("Admin Secret required for discard:");
-      if (!adminSecret) return;
-
-      const res = await fetch("http://localhost:8747/api/admin/discard-questions", {
-        method: "POST",
-        headers: { 
-          "Content-Type": "application/json",
-          "x-admin-secret": adminSecret
-        },
-        body: JSON.stringify({ questions: [question] }),
-      });
-
-      if (!res.ok) throw new Error("Failed to permanently discard question");
-      
-      setQuestions(questions.filter((_, i) => i !== index));
-      setToast({ show: true, message: "Question permanently discarded!", type: "success" });
-    } catch (err) {
-      setToast({ show: true, message: err.message, type: "error" });
-    }
-  };
-
-  const handleAutoScrape = async () => {
-    try {
-      const adminSecret = prompt("Admin Secret required for auto-scrape:");
-      if (!adminSecret) return;
-      setIsLoading(true);
-
-      const res = await fetch("http://localhost:8747/api/admin/auto-scrape", {
-        method: "POST",
-        headers: { "x-admin-secret": adminSecret }
-      });
-      
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to auto-scrape");
-      
-      toast.success(`Scraped ${data.count} new questions from Reddit! Pull the AI batch to review.`);
-    } catch (err) {
-      toast.error(err.message);
-    } finally {
-      setIsLoading(false);
-    }
+    if (!confirm("Discard this question from staging?")) return;
+    setQuestions(questions.filter((_, i) => i !== index));
+    toast.success("Question discarded from staging!");
   };
 
   const handleUploadToDB = async () => {
@@ -179,7 +150,6 @@ export const AdminDashboard = () => {
         headers: { "x-admin-secret": secret }
       });
       toast.success("Question updated globally");
-      fetchLiveQuestions();
     } catch (err) {
       toast.error("Failed to update question");
     }
@@ -192,10 +162,33 @@ export const AdminDashboard = () => {
         headers: { "x-admin-secret": secret }
       });
       toast.success("Question deleted");
-      fetchLiveQuestions();
+      // Optimistic update to preserve scroll
+      setLiveQuestions(prev => prev.filter(q => q._id !== id));
     } catch (err) {
       toast.error("Failed to delete question");
     }
+  };
+
+  // Bulk Actions
+  const handleBulkDeleteLive = async () => {
+    if (!confirm(`Delete ${selectedQuestions.length} live questions forever?`)) return;
+    try {
+      await apiClient.post("/api/admin/questions/bulk-delete", { ids: selectedQuestions }, {
+        headers: { "x-admin-secret": secret }
+      });
+      toast.success("Bulk delete successful");
+      setLiveQuestions(prev => prev.filter(q => !selectedQuestions.includes(q._id)));
+      setSelectedQuestions([]);
+    } catch (err) {
+      toast.error("Failed to bulk delete");
+    }
+  };
+
+  const handleBulkDiscardStaging = () => {
+    if (!confirm(`Discard ${selectedQuestions.length} staging questions?`)) return;
+    setQuestions(prev => prev.filter((_, i) => !selectedQuestions.includes(i)));
+    setSelectedQuestions([]);
+    toast.success("Bulk discard successful");
   };
 
   // Sorting Logic for Stats
@@ -234,14 +227,40 @@ export const AdminDashboard = () => {
   // REUSABLE TABLE COMPONENT FOR STAGING AND LIVE
   const renderTable = (data, isLive) => {
     if (data.length === 0 && !isFetchingLive) {
-      return <div className="p-12 text-center text-white/50 text-2xl">No questions found.</div>;
+      return <div className="p-12 text-center text-white/50 text-2xl">No questions found for this category.</div>;
     }
 
     return (
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto relative">
+        {selectedQuestions.length > 0 && (
+          <div className="sticky top-0 z-20 flex items-center justify-between p-4 bg-rose-500/90 backdrop-blur border-b-4 border-rose-500/50 mb-4 shadow-[4px_4px_0px_rgba(244,63,94,0.5)]">
+            <span className="font-bold text-xl sm:text-2xl text-white">{selectedQuestions.length} ITEMS SELECTED</span>
+            <button 
+              onClick={isLive ? handleBulkDeleteLive : handleBulkDiscardStaging}
+              className="px-4 sm:px-6 py-2 bg-black text-rose-500 font-bold tracking-widest border-2 border-rose-500 hover:bg-rose-500 hover:text-white transition-colors shadow-[2px_2px_0px_black] uppercase"
+            >
+              BULK DELETE
+            </button>
+          </div>
+        )}
+
         <div className="w-full min-w-[1000px] border-4 border-white/20 bg-black/40 rounded-none shadow-[8px_8px_0px_rgba(255,255,255,0.05)]">
-          <div className="grid grid-cols-12 gap-4 p-4 border-b-4 border-dashed border-white/20 bg-white/5 font-bold text-[#00E5FF] tracking-wider text-xl">
-            <div className="col-span-1 text-center">#</div>
+          <div className="grid grid-cols-12 gap-4 p-4 border-b-4 border-dashed border-white/20 bg-white/5 font-bold text-[#00E5FF] tracking-wider text-xl items-center">
+            <div className="col-span-1 text-center flex items-center justify-center gap-2">
+              <input 
+                type="checkbox" 
+                className="w-5 h-5 accent-rose-500 cursor-pointer"
+                checked={data.length > 0 && selectedQuestions.length === data.length}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setSelectedQuestions(data.map((q, i) => isLive ? q._id : i));
+                  } else {
+                    setSelectedQuestions([]);
+                  }
+                }}
+              />
+              #
+            </div>
             <div className="col-span-4">QUESTION TEXT</div>
             <div className="col-span-4">OPTIONS</div>
             <div className="col-span-2">META</div>
@@ -249,119 +268,140 @@ export const AdminDashboard = () => {
           </div>
           
           <div className="divide-y-2 divide-white/10">
-            {data.map((q, qIndex) => (
-              <div key={isLive ? q._id : qIndex} className="grid grid-cols-12 gap-4 p-4 items-start hover:bg-white/5 transition-colors">
-                <div className="col-span-1 flex items-center justify-center pt-2">
-                  <span className="text-2xl font-bold text-white/30">{isLive ? (page - 1) * 20 + qIndex + 1 : qIndex + 1}</span>
-                </div>
-                
-                <div className="col-span-4">
-                  <textarea 
-                    value={q.text}
-                    onChange={(e) => {
-                      if (!isLive) {
-                        const updated = [...questions];
-                        updated[qIndex].text = e.target.value;
-                        setQuestions(updated);
-                      } else {
-                        const updated = [...liveQuestions];
-                        updated[qIndex].text = e.target.value;
-                        setLiveQuestions(updated);
-                      }
-                    }}
-                    className="w-full bg-black/40 border-2 border-white/20 p-2 text-lg focus:border-[#87CEFA] focus:outline-none min-h-[80px] resize-y font-cabana"
-                  />
-                </div>
-                
-                <div className="col-span-4 space-y-2">
-                  {q.options?.map((opt, oIndex) => (
+            {data.map((q, qIndex) => {
+              const rowId = isLive ? q._id : qIndex;
+              const isSelected = selectedQuestions.includes(rowId);
+              return (
+                <div key={rowId} className={`grid grid-cols-12 gap-4 p-4 items-start transition-colors ${isSelected ? 'bg-rose-500/10' : 'hover:bg-white/5'}`}>
+                  <div className="col-span-1 flex items-center justify-center pt-2 gap-3">
                     <input 
-                      key={oIndex}
-                      type="text"
-                      value={opt}
+                      type="checkbox" 
+                      className="w-5 h-5 accent-rose-500 cursor-pointer mt-1"
+                      checked={isSelected}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedQuestions(prev => [...prev, rowId]);
+                        } else {
+                          setSelectedQuestions(prev => prev.filter(item => item !== rowId));
+                        }
+                      }}
+                    />
+                    <span className="text-2xl font-bold text-white/30">{isLive ? (page - 1) * 20 + qIndex + 1 : qIndex + 1}</span>
+                  </div>
+                  
+                  <div className="col-span-4">
+                    <textarea 
+                      value={q.text}
                       onChange={(e) => {
                         if (!isLive) {
                           const updated = [...questions];
-                          updated[qIndex].options[oIndex] = e.target.value;
+                          updated[qIndex].text = e.target.value;
                           setQuestions(updated);
                         } else {
                           const updated = [...liveQuestions];
-                          updated[qIndex].options[oIndex] = e.target.value;
+                          updated[qIndex].text = e.target.value;
                           setLiveQuestions(updated);
                         }
                       }}
-                      className="w-full bg-black/40 border-2 border-white/20 p-2 focus:border-[#87CEFA] focus:outline-none font-cabana"
+                      className="w-full bg-black/40 border-2 border-white/20 p-2 text-lg focus:border-[#87CEFA] focus:outline-none min-h-[80px] resize-y font-cabana"
                     />
-                  ))}
+                  </div>
+                  
+                  <div className="col-span-4 space-y-2">
+                    {q.options?.map((opt, oIndex) => (
+                      <input 
+                        key={oIndex}
+                        type="text"
+                        value={opt}
+                        onChange={(e) => {
+                          if (!isLive) {
+                            const updated = [...questions];
+                            updated[qIndex].options[oIndex] = e.target.value;
+                            setQuestions(updated);
+                          } else {
+                            const updated = [...liveQuestions];
+                            updated[qIndex].options[oIndex] = e.target.value;
+                            setLiveQuestions(updated);
+                          }
+                        }}
+                        className="w-full bg-black/40 border-2 border-white/20 p-2 focus:border-[#87CEFA] focus:outline-none font-cabana"
+                      />
+                    ))}
+                  </div>
+                  
+                  <div className="col-span-2 space-y-4">
+                    <input 
+                      type="text"
+                      value={q.category}
+                      onChange={(e) => {
+                        if (!isLive) {
+                          const updated = [...questions];
+                          updated[qIndex].category = e.target.value.toUpperCase();
+                          setQuestions(updated);
+                        } else {
+                          const updated = [...liveQuestions];
+                          updated[qIndex].category = e.target.value.toUpperCase();
+                          setLiveQuestions(updated);
+                        }
+                      }}
+                      className="w-full bg-black/40 border-2 border-white/20 p-2 focus:border-[#87CEFA] focus:outline-none text-[#E48F45] uppercase text-sm font-cabana tracking-wide"
+                    />
+                    <input 
+                      type="number"
+                      min="1" max="5"
+                      value={q.heatLevel}
+                      onChange={(e) => {
+                        const val = parseInt(e.target.value) || 1;
+                        if (!isLive) {
+                          const updated = [...questions];
+                          updated[qIndex].heatLevel = val;
+                          setQuestions(updated);
+                        } else {
+                          const updated = [...liveQuestions];
+                          updated[qIndex].heatLevel = val;
+                          setLiveQuestions(updated);
+                        }
+                      }}
+                      className="w-full bg-black/40 border-2 border-white/20 p-2 focus:border-[#87CEFA] focus:outline-none text-rose-400"
+                    />
+                  </div>
+                  
+                  <div className="col-span-1 flex flex-col items-center justify-center gap-2 pt-2">
+                    {isLive && (
+                      <button 
+                        onClick={() => handleUpdateLiveQuestion(q._id, q)}
+                        className="p-3 bg-[#00E5FF]/20 border-2 border-[#00E5FF]/50 hover:bg-[#00E5FF]/40 transition-all shadow-[2px_2px_0px_rgba(0,229,255,0.5)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]"
+                        title="Save Changes"
+                      >
+                        <img src="/save.png" alt="Save" className="w-5 h-5 object-contain drop-shadow-[0_0_4px_rgba(0,229,255,0.8)]" />
+                      </button>
+                    )}
+                    <button 
+                      onClick={() => isLive ? handleDeleteLiveQuestion(q._id) : handleDiscardStagingQuestion(qIndex, q)}
+                      className="p-3 bg-rose-500/20 border-2 border-rose-500/50 hover:bg-rose-500/40 transition-all shadow-[2px_2px_0px_rgba(244,63,94,0.5)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]"
+                      title="Delete Question"
+                    >
+                      <img src="/delete.png" alt="Delete" className="w-5 h-5 object-contain drop-shadow-[0_0_4px_rgba(244,63,94,0.8)]" />
+                    </button>
+                  </div>
                 </div>
-                
-                <div className="col-span-2 space-y-4">
-                  <input 
-                    type="text"
-                    value={q.category}
-                    onChange={(e) => {
-                      if (!isLive) {
-                        const updated = [...questions];
-                        updated[qIndex].category = e.target.value.toUpperCase();
-                        setQuestions(updated);
-                      } else {
-                        const updated = [...liveQuestions];
-                        updated[qIndex].category = e.target.value.toUpperCase();
-                        setLiveQuestions(updated);
-                      }
-                    }}
-                    className="w-full bg-black/40 border-2 border-white/20 p-2 focus:border-[#87CEFA] focus:outline-none text-[#E48F45] uppercase text-sm font-cabana tracking-wide"
-                  />
-                  <input 
-                    type="number"
-                    min="1" max="5"
-                    value={q.heatLevel}
-                    onChange={(e) => {
-                      const val = parseInt(e.target.value) || 1;
-                      if (!isLive) {
-                        const updated = [...questions];
-                        updated[qIndex].heatLevel = val;
-                        setQuestions(updated);
-                      } else {
-                        const updated = [...liveQuestions];
-                        updated[qIndex].heatLevel = val;
-                        setLiveQuestions(updated);
-                      }
-                    }}
-                    className="w-full bg-black/40 border-2 border-white/20 p-2 focus:border-[#87CEFA] focus:outline-none text-rose-400"
-                  />
-                </div>
-                
-                <div className="col-span-1 flex flex-col items-center justify-center gap-2 pt-2">
-                  {isLive && (
-                     <button 
-                       onClick={() => handleUpdateLiveQuestion(q._id, q)}
-                       className="p-3 bg-[#00E5FF]/20 border-2 border-[#00E5FF]/50 hover:bg-[#00E5FF]/40 transition-all shadow-[2px_2px_0px_rgba(0,229,255,0.5)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]"
-                       title="Save Changes"
-                     >
-                       <img src="/save.png" alt="Save" className="w-5 h-5 object-contain drop-shadow-[0_0_4px_rgba(0,229,255,0.8)]" />
-                     </button>
-                  )}
-                  <button 
-                    onClick={() => isLive ? handleDeleteLiveQuestion(q._id) : handleDiscardStagingQuestion(qIndex, q)}
-                    className="p-3 bg-rose-500/20 border-2 border-rose-500/50 hover:bg-rose-500/40 transition-all shadow-[2px_2px_0px_rgba(244,63,94,0.5)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]"
-                    title="Delete Question"
-                  >
-                    <img src="/delete.png" alt="Delete" className="w-5 h-5 object-contain drop-shadow-[0_0_4px_rgba(244,63,94,0.8)]" />
-                  </button>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
     );
   };
 
+  const getFilteredStagingData = () => {
+    if (filterCategory === "ALL") return questions;
+    return questions.filter(q => q.category && q.category.toUpperCase() === filterCategory.toUpperCase());
+  };
+
   if (view === "edit" || view === "live") {
     return (
       <div className="min-h-screen bg-[#0A0A0A] text-white p-6 font-['IndieSellout'] flex flex-col">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-6 mb-6 border-b-4 border-dashed border-white/20 shrink-0 gap-4 sm:gap-0">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-6 mb-6 border-b-4 border-dashed border-white/20 shrink-0 gap-4 sm:gap-0 z-30">
           <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
             <button 
               onClick={() => setView("dashboard")}
@@ -374,40 +414,64 @@ export const AdminDashboard = () => {
                 {view === "edit" ? "EDIT STAGING DATA" : "LIVE DATABASE VIEW"}
               </h1>
               <p className="text-white/50 text-xs sm:text-lg">
-                {view === "edit" ? `${questions.length} questions in staging` : `Page ${page} of ${totalPages}`}
+                {view === "edit" ? `${getFilteredStagingData().length} questions in staging` : `Page ${page} of ${totalPages}`}
               </p>
             </div>
           </div>
           
-          <div className="flex flex-wrap sm:flex-nowrap gap-2 sm:gap-4 w-full sm:w-auto">
-             {view === "live" && (
-                <div className="flex gap-2 w-full sm:w-auto">
-                   <button 
-                     onClick={() => setPage(p => Math.max(1, p - 1))} 
-                     disabled={page === 1}
-                     className="flex-1 sm:flex-none px-3 sm:px-4 py-2 border-2 border-white/20 bg-white/5 disabled:opacity-50 text-xs sm:text-base"
-                   >PREV</button>
-                   <button 
-                     onClick={() => setPage(p => Math.min(totalPages, p + 1))} 
-                     disabled={page === totalPages}
-                     className="flex-1 sm:flex-none px-3 sm:px-4 py-2 border-2 border-white/20 bg-white/5 disabled:opacity-50 text-xs sm:text-base"
-                   >NEXT</button>
-                </div>
-             )}
-             {view === "edit" && (
+          <div className="flex flex-wrap sm:flex-nowrap gap-2 sm:gap-4 w-full sm:w-auto items-center">
+            
+            <select 
+              value={filterCategory}
+              onChange={(e) => {
+                setFilterCategory(e.target.value);
+                setPage(1);
+              }}
+              className="bg-black/80 border-2 border-[#E48F45] text-[#E48F45] p-2 sm:p-3 font-bold uppercase tracking-widest focus:outline-none shadow-[4px_4px_0px_rgba(228,143,69,0.2)]"
+            >
+              <option value="ALL">ALL CATEGORIES</option>
+              <option value="Would You Rather">WOULD YOU RATHER</option>
+              <option value="Most Likely To">MOST LIKELY TO</option>
+              <option value="Never Have I Ever">NEVER HAVE I EVER</option>
+              <option value="Hot Takes">HOT TAKES</option>
+              <option value="This or That">THIS OR THAT</option>
+              <option value="Truth or Dare">TRUTH OR DARE</option>
+              <option value="GENERAL">GENERAL</option>
+              <option value="18+">18+ (ADULTS ONLY)</option>
+            </select>
+
+            {view === "live" && (
+              <div className="flex gap-2 w-full sm:w-auto">
                 <button 
-                  onClick={handleUploadToDB}
-                  disabled={isUploading || questions.length === 0}
-                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 sm:px-6 py-2 sm:py-3 font-bold bg-[#00E5FF] text-black text-sm sm:text-xl transition-all shadow-[4px_4px_0px_white] hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] disabled:opacity-50"
-                >
-                  <Save className="w-4 h-4 sm:w-6 sm:h-6" />
-                  {isUploading ? "COMMITTING..." : "COMMIT ALL TO DB"}
-                </button>
-             )}
+                  onClick={() => setPage(p => Math.max(1, p - 1))} 
+                  disabled={page === 1}
+                  className="flex-1 sm:flex-none px-3 sm:px-4 py-2 border-2 border-white/20 bg-white/5 disabled:opacity-50 text-xs sm:text-base font-bold"
+                >PREV</button>
+                <button 
+                  onClick={() => setPage(p => Math.min(totalPages, p + 1))} 
+                  disabled={page === totalPages}
+                  className="flex-1 sm:flex-none px-3 sm:px-4 py-2 border-2 border-white/20 bg-white/5 disabled:opacity-50 text-xs sm:text-base font-bold"
+                >NEXT</button>
+              </div>
+            )}
+            {view === "edit" && (
+              <button 
+                onClick={handleUploadToDB}
+                disabled={isUploading || questions.length === 0}
+                className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 sm:px-6 py-2 sm:py-3 font-bold bg-[#00E5FF] text-black text-sm sm:text-xl transition-all shadow-[4px_4px_0px_white] hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] disabled:opacity-50"
+              >
+                <Save className="w-4 h-4 sm:w-6 sm:h-6" />
+                {isUploading ? "COMMITTING..." : "COMMIT ALL TO DB"}
+              </button>
+            )}
           </div>
         </div>
         
-        {isFetchingLive ? <div className="flex justify-center p-12"><ReckonLoader /></div> : renderTable(view === "live" ? liveQuestions : questions, view === "live")}
+        {isFetchingLive ? (
+           <div className="flex justify-center p-12"><ReckonLoader /></div>
+        ) : (
+           renderTable(view === "live" ? liveQuestions : getFilteredStagingData(), view === "live")
+        )}
       </div>
     );
   }
@@ -471,13 +535,33 @@ export const AdminDashboard = () => {
             </div>
 
             {/* Manage DB Button */}
-            <button 
-              onClick={() => setView("live")}
-              className="w-full flex items-center justify-center gap-3 p-6 font-bold bg-transparent text-[#00E5FF] border-4 border-[#00E5FF] text-2xl tracking-widest transition-all shadow-[6px_6px_0px_rgba(0,229,255,0.2)] hover:shadow-none hover:translate-x-[6px] hover:translate-y-[6px]"
-            >
-              <Database size={28} />
-              MANAGE LIVE DATABASE
-            </button>
+            <div className="space-y-4">
+              <button 
+                onClick={() => setView("live")}
+                className="w-full flex items-center justify-center gap-3 p-6 font-bold bg-transparent text-[#00E5FF] border-4 border-[#00E5FF] text-2xl tracking-widest transition-all shadow-[6px_6px_0px_rgba(0,229,255,0.2)] hover:shadow-none hover:translate-x-[6px] hover:translate-y-[6px]"
+              >
+                <Database size={28} />
+                MANAGE LIVE DATABASE
+              </button>
+              
+              <button 
+                onClick={async () => {
+                  if(!confirm("Scan and delete duplicate questions across the entire database? This cannot be undone.")) return;
+                  try {
+                    const res = await apiClient.post("/api/admin/questions/remove-duplicates", {}, { headers: { "x-admin-secret": secret } });
+                    toast.success(res.data.message);
+                    fetchStats();
+                    if (view === "live") fetchLiveQuestions();
+                  } catch(err) {
+                    toast.error("Failed to clean duplicates");
+                  }
+                }}
+                className="w-full flex items-center justify-center gap-3 p-6 font-bold bg-transparent text-rose-500 border-4 border-rose-500 text-xl tracking-widest transition-all shadow-[6px_6px_0px_rgba(244,63,94,0.2)] hover:shadow-none hover:translate-x-[6px] hover:translate-y-[6px]"
+              >
+                <Trash2 size={28} />
+                SCAN & CLEAN DUPLICATES
+              </button>
+            </div>
           </div>
 
           {/* Upload & Staging Panel */}
